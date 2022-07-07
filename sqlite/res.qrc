@@ -1,0 +1,27 @@
+<RCC>
+    <qresource prefix="/create-table">
+        <file alias="additionally.sql">assets/create-table/additionally.sql</file>
+        <file alias="additionally_country.sql">assets/create-table/additionally_country.sql</file>
+        <file alias="country.sql">assets/create-table/country.sql</file>
+        <file alias="employees.sql">assets/create-table/employees.sql</file>
+    </qresource>
+    <qresource prefix="/create-index">
+        <file alias="index_additionally_country.sql">assets/create/index_additionally_country.sql</file>
+    </qresource>
+    <qresource prefix="/default-insert">
+        <file alias="country.sql">assets/default-insert/country.sql</file>
+    </qresource>
+    <qresource prefix="/insert">
+        <file alias="employee.sql">assets/insert/employee.sql</file>
+    </qresource>
+    <qresource prefix="/select">
+        <file alias="employees.sql">assets/select/employees.sql</file>
+        <file alias="countries.sql">assets/select/countries.sql</file>
+    </qresource>
+    <qresource prefix="/update">
+        <file alias="employee.sql">assets/update/employee.sql</file>
+    </qresource>
+    <qresource prefix="/delete">
+        <file alias="employee.sql">assets/delete/employee.sql</file>
+    </qresource>
+</RCC>
