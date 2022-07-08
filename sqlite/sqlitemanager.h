@@ -1,17 +1,19 @@
 #ifndef SQLITEMANAGER_H
 #define SQLITEMANAGER_H
 
-#include "sqlrenamer.h"
 #include <QList>
 #include <QPair>
+#include "datasqlite.h"
+
+#include "sqlrenamer.h"
 
 class QSqlError;
 class QSqlDatabase;
 class QString;
 
-struct Employee;
-struct Additionally;
-struct Country;
+//struct Employee;
+//struct Additionally;
+//struct Country;
 
 class SQLiteManager
 {
@@ -19,7 +21,7 @@ public:
     SQLiteManager();
 
     bool isDriverExit();
-    QSqlError initDB();
+    QSqlError initDB(const QString& nameDB = "database");
     QSqlError execInsertEmployee(const QPair<Employee, Additionally>& employee);
     QList<QPair<Employee, Additionally>> execSelectEmployees();
     QList<Country> execSelectCountries();
@@ -31,7 +33,8 @@ private:
 
     bool isTableExits(const QSqlDatabase& db);
     QSqlError execDirQuery(const QString& dir);
-    QSqlError execBigQuery(const QString& bigQuery);
+    QSqlError beginTransaction();
+    QSqlError commitTransaction();
 };
 
 #endif // SQLITEMANAGER_H

@@ -4,6 +4,7 @@
 #include <QPair>
 
 class QStringList;
+
 struct Employee;
 struct Additionally;
 
@@ -14,10 +15,10 @@ public:
 
     QStringList updateEmployee(const QPair<Employee, Additionally>& employee);
     QStringList deleteEmployee(int idEmployee, int idAdditionally);
+    QStringList insertEmployee(const QPair<Employee, Additionally>& employee);
 
 private:
     int replace(QString& origin, const QString& before, const QString& after, int from = 0);
-
 };
 
 #endif // SQLRENAMER_H

@@ -1,1 +1,1 @@
-select code, name from country;
+select code, name from country ORDER BY name;

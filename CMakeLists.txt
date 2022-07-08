@@ -5,5 +5,6 @@ project(qml-test LANGUAGES CXX)
 
 add_subdirectory(app)
 add_subdirectory(sqlite)
+add_subdirectory(sqlite-test)
 
 
