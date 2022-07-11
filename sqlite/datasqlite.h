@@ -50,7 +50,8 @@ struct Employee {
     bool operator==(const Employee& rhs) const {
         return ( this->id == rhs.id &&
                  this->firstName == rhs.firstName &&
-                 this->lastName == rhs.lastName);
+                 this->lastName == rhs.lastName &&
+                 this->additionally_id == rhs.additionally_id);
     };
 };
 

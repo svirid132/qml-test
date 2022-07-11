@@ -16,6 +16,9 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Sql Quick REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
+        models/countrymodel.cpp
+        models/employeemodel.cpp
+        meddiator.cpp
         qml.qrc
 )
 

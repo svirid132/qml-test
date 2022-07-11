@@ -32,7 +32,6 @@ QSqlError SQLiteManager::initDB(const QString& nameDB) {
         return db.lastError();
     }
 
-    qDebug() << "isTableExits" << isTableExits(db);
     if (isTableExits(db)) {
         return QSqlError();
     }
@@ -78,19 +77,12 @@ QSqlError SQLiteManager::execInsertEmployee(const QPair<Employee, Additionally>&
     if (error.isValid()) return error;
     QSqlQuery q;
     for (int i = 0; i < execCmds.length(); ++i) {
-//        qDebug() << "insert:" << execCmds.at(i);
         if (!q.exec(execCmds.at(i))) {
             return q.lastError();
         }
     }
     error = commitTransaction();
     if (error.isValid()) return error;
-
-    //test
-    QFile resFile("employee");
-    resFile.open(QIODevice::WriteOnly);
-    resFile.write(execCmds.join(";").toLocal8Bit());
-    resFile.close();
 
     return QSqlError();
 }
@@ -99,7 +91,7 @@ QList<QPair<Employee, Additionally>> SQLiteManager::execSelectEmployees()
 {
     QFile file(":/select/employees.sql");
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "dont open employee.sql!";
+        qDebug() << "dont open file!";
     }
     QString execCmd = QString(file.readAll());
     QSqlError error;
@@ -116,19 +108,18 @@ QList<QPair<Employee, Additionally>> SQLiteManager::execSelectEmployees()
         emp.id = q.value(0).toInt();
         emp.firstName = q.value(1).toString();
         emp.lastName = q.value(2).toString();
-        additionally.id = q.value(3).toInt();
-        additionally.address = q.value(4).toString();
-        additionally.phone = q.value(5).toString();
-        additionally.maritalStatus = q.value(6).toString();
-        QString strCodes = q.value(7).toString();
+        emp.additionally_id = q.value(3).toInt();
+        additionally.id = q.value(4).toInt();
+        additionally.address = q.value(5).toString();
+        additionally.phone = q.value(6).toString();
+        additionally.maritalStatus = q.value(7).toString();
+        QString strCodes = q.value(8).toString();
         QStringList listCodes = {};
         if (!strCodes.isEmpty()) {
             listCodes = strCodes.split(";");
         }
 
-        qDebug() << "strCodes:" << listCodes;
         QList<int> codes;
-        qDebug() << codes;
         for (int i = 0; i < listCodes.size(); ++i) {
             int code = listCodes.at(i).toInt();
             codes.append(code);
@@ -144,11 +135,57 @@ QList<QPair<Employee, Additionally>> SQLiteManager::execSelectEmployees()
     return employees;
 }
 
+QPair<Employee, Additionally> SQLiteManager::execSelectLastEmp()
+{
+    QFile file(":/select/last_employee.sql");
+    if (!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "dont open file";
+    }
+    QString execCmd = QString(file.readAll());
+    QSqlError error;
+    error = beginTransaction();
+    if (error.isValid()) return QPair<Employee, Additionally>();
+    QSqlQuery q;
+    if (!q.exec(execCmd)) {
+        qDebug() << "execSelectEmployee:" << q.lastError();
+    }
+    q.next();
+    Employee emp;
+    Additionally additionally;
+    emp.id = q.value(0).toInt();
+    emp.firstName = q.value(1).toString();
+    emp.lastName = q.value(2).toString();
+    emp.additionally_id = q.value(3).toInt();
+    additionally.id = q.value(4).toInt();
+    additionally.address = q.value(5).toString();
+    additionally.phone = q.value(6).toString();
+    additionally.maritalStatus = q.value(7).toString();
+    QString strCodes = q.value(8).toString();
+    QStringList listCodes = {};
+    if (!strCodes.isEmpty()) {
+        listCodes = strCodes.split(";");
+    }
+    QList<int> codes;
+    for (int i = 0; i < listCodes.size(); ++i) {
+        int code = listCodes.at(i).toInt();
+        codes.append(code);
+    }
+    additionally.codeCountries = codes;
+    QPair<Employee, Additionally> employee;
+    employee.first = emp;
+    employee.second = additionally;
+
+    error = commitTransaction();
+    if (error.isValid()) return QPair<Employee, Additionally>();
+
+    return employee;
+}
+
 QList<Country> SQLiteManager::execSelectCountries()
 {
     QFile file(":/select/countries.sql");
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "dont open employee.sql!";
+        qDebug() << "dont open file!";
     }
     QString execCmd = QString(file.readAll());
     QSqlError error;
@@ -176,21 +213,6 @@ QSqlError SQLiteManager::execUpdateEmployee(const QPair<Employee, Additionally> 
     Employee emp = employee.first;
     Additionally add = employee.second;
 
-    //    Employee emp;
-    //    emp.id = 2;
-    //    emp.firstName = "Александр";
-    //    emp.lastName = "Свиридов";
-    //    Additionally additionally;
-    //    additionally.id = 133;
-    //    additionally.address = "Вязов";
-    //    additionally.maritalStatus = "Не женат";
-    //    additionally.phone = "123-123";
-    //    additionally.codeCountries.append(643);
-    //    additionally.codeCountries.append(895);
-    //    QPair<Employee, Additionally> employee;
-    //    employee.first = emp;
-    //    employee.second = additionally;
-
     QStringList execCmds = renamer.updateEmployee(employee);
     QSqlError error;
     error = beginTransaction();
@@ -198,7 +220,6 @@ QSqlError SQLiteManager::execUpdateEmployee(const QPair<Employee, Additionally> 
     QSqlQuery q;
     for (int i = 0; i < execCmds.size(); ++i) {
         if (!q.exec(execCmds.at(i))) {
-            qDebug() << "update error:" << execCmds.at(i);
             return q.lastError();
         }
     }
@@ -215,7 +236,6 @@ QSqlError SQLiteManager::execDeleteEmployee(int idEmployee, int idAdditional)
     if (error.isValid()) return error;
     QSqlQuery q;
     for (int i = 0; i < execCmds.size(); ++i) {
-        //qDebug() << execCmds.at(i);
         if (!q.exec(execCmds.at(i))) {
             return q.lastError();
         }

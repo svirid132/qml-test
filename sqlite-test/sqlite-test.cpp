@@ -27,6 +27,7 @@ private:
 private slots:
     void initTestCase();
     void insertEmps();
+    void selectLastEmp();
     void selectEmps();
     void selectCountries();
     void updateEmps();
@@ -34,15 +35,15 @@ private slots:
 };
 
 bool SQLiteTest::isCompareEmployee(const QPair<Employee, Additionally>& before, const QPair<Employee, Additionally>& after) {
-    qDebug() << "before.first == after.first" << (before.first == after.first);
-    qDebug() << before.first.id << after.first.id
-             << before.first.firstName << after.first.firstName
-             << before.first.lastName << after.first.lastName;
-    qDebug() << before.second.id << after.second.id
-             << before.second.address << before.second.address
-             << before.second.maritalStatus << after.second.maritalStatus
-             << before.second.phone << after.second.phone;
-    qDebug() << "before.second == after.second" << (before.second == after.second);
+//    qDebug() << before.first.id << after.first.id
+//             << before.first.firstName << after.first.firstName
+//             << before.first.lastName << after.first.lastName;
+//    qDebug() << before.second.id << after.second.id
+//             << before.second.address << before.second.address
+//             << before.second.maritalStatus << after.second.maritalStatus
+//             << before.second.phone << after.second.phone;
+//    qDebug() << "before.first == after.first" << (before.first == after.first);
+//    qDebug() << "before.second == after.second" << (before.second == after.second);
     return (before.first == after.first) && (before.second == after.second);
 }
 
@@ -81,17 +82,28 @@ void SQLiteTest::insertEmps()
 
     QSqlError error;
     error = manager.execInsertEmployee(QPair<Employee, Additionally>({emp_1, add_1}));
-    qDebug() << error;
     QVERIFY (!error.isValid());
     error = manager.execInsertEmployee(QPair<Employee, Additionally>({emp_2, add_2}));
     QVERIFY (!error.isValid());
 }
 
+void SQLiteTest::selectLastEmp()
+{
+    emp_2.id = 2;
+    emp_2.additionally_id = 2;
+    add_2.id = 2;
+
+    QPair<Employee, Additionally> emp = manager.execSelectLastEmp();
+    QVERIFY (isCompareEmployee(emp, {emp_2, add_2}));
+}
+
 void SQLiteTest::selectEmps()
 {
     emp_1.id = 1;
+    emp_1.additionally_id = 1;
     add_1.id = 1;
     emp_2.id = 2;
+    emp_2.additionally_id = 2;
     add_2.id = 2;
 
     checkSelect({{emp_1, add_1}, {emp_2, add_2}});
@@ -101,7 +113,6 @@ void SQLiteTest::selectCountries()
 {
     QList<Country> list = manager.execSelectCountries();
     QVERIFY (list.size() == 7);
-//    qDebug() << list.at(0).code << list.at(1).code << list.at(0).name << list.at(1).name;
     QVERIFY (list.at(0).code == 895 && list.at(0).name == "Абхазия" &&
              list.at(1).code == 40 && list.at(1).name == "Австрия");
 }
@@ -119,10 +130,8 @@ void SQLiteTest::updateEmps()
 
     QSqlError error;
     error = manager.execUpdateEmployee(QPair<Employee, Additionally>({emp_1, add_1}));
-    qDebug() << "error_1:" << error;
     QVERIFY(!error.isValid());
     error = manager.execUpdateEmployee(QPair<Employee, Additionally>({emp_2, add_2}));
-    qDebug() << "error_2:" << error;
     QVERIFY(!error.isValid());
     checkSelect({{emp_1, add_1}, {emp_2, add_2}});
 }

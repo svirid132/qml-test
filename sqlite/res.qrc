@@ -17,6 +17,7 @@
     <qresource prefix="/select">
         <file alias="employees.sql">assets/select/employees.sql</file>
         <file alias="countries.sql">assets/select/countries.sql</file>
+        <file alias="last_employee.sql">assets/select/last_employee.sql</file>
     </qresource>
     <qresource prefix="/update">
         <file alias="employee.sql">assets/update/employee.sql</file>

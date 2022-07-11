@@ -24,6 +24,7 @@ public:
     QSqlError initDB(const QString& nameDB = "database");
     QSqlError execInsertEmployee(const QPair<Employee, Additionally>& employee);
     QList<QPair<Employee, Additionally>> execSelectEmployees();
+    QPair<Employee, Additionally> execSelectLastEmp();
     QList<Country> execSelectCountries();
     QSqlError execUpdateEmployee(const QPair<Employee, Additionally>& employee);
     QSqlError execDeleteEmployee(int idEmployee, int idAdditional);

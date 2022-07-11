@@ -3,6 +3,8 @@
 #include <QtSql>
 #include <datasqlite.h>
 #include <sqlitemanager.h>
+#include "meddiator.h"
+#include "dataMeddiator.h"
 
 int main(int argc, char *argv[])
 {
@@ -18,28 +20,8 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+    Meddiator meddiator(engine);
     engine.load(url);
-
-    SQLiteManager manager;
-    manager.isDriverExit();
-    QSqlError error = manager.initDB();
-    if (error.isValid()) {
-        qDebug() << "initDb:" << error;
-    }
-
-    Employee emp;
-    emp.firstName = "Александр";
-    emp.lastName = "Свиридов";
-    Additionally additionally;
-    additionally.address = "Вязов";
-    additionally.maritalStatus = "Не женат";
-    additionally.phone = "123-123";
-//    additionally.countries.append(Country{643, QString("Россия")});
-//    additionally.countries.append(Country{895, QString("Абхазия")});
-    QPair<Employee, Additionally> employee;
-    QSqlError errorInsert = manager.execInsertEmployee(employee);
-    qDebug() << "execInsertEmployee:" << errorInsert;
-    manager.execDeleteEmployee(1, 2);
 
     return app.exec();
 }
