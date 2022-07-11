@@ -10,4 +10,4 @@ Sqlite + Qt + QML
 
 Скриншоты программы:
 
-![Снимок экрана от 2022-07-12 01-29-39](https://user-images.githubusercontent.com/69749126/178369515-aaaec9e2-69f3-4743-b5d4-4f02553e87a5.png)
+![Снимок экрана от 2022-07-12 01-29-39](https://user-images.githubusercontent.com/69749126/178369737-ff219446-9dc2-42c1-8356-7e0f120dc916.png)
