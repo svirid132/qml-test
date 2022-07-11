@@ -10,7 +10,6 @@ Meddiator::Meddiator(QQmlApplicationEngine& app, QObject *parent)
     : QObject{parent}
 {
     QSqlError error = manager.initDB();
-    qDebug() << "manager:" << !error.isValid();
 
     //Заполнение модели странами
     QList<Country> listCounties = manager.execSelectCountries();
@@ -29,7 +28,6 @@ Meddiator::Meddiator(QQmlApplicationEngine& app, QObject *parent)
         Employee emp = listPairEmp[i].first;
         Additionally add = listPairEmp[i].second;
         empModel.insertEmp(emp);
-        qDebug() << "emp.additionally_id" << emp.additionally_id;
         adds[emp.additionally_id] = add;
     }
 
@@ -43,7 +41,6 @@ QStringList Meddiator::getEmployee(int rowIndex)
     QStringList list;
     Employee emp = empModel.getEmp(rowIndex);
     Additionally add = adds[emp.additionally_id];
-    qDebug() << "emp.id_add"<< emp.additionally_id <<"address:" <<add.address;
     list << emp.firstName << emp.lastName << add.address << add.phone << add.maritalStatus;
 
     return list;

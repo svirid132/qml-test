@@ -10,6 +10,12 @@ Window {
     visible: true
     title: qsTr("Qml-test")
 
+    maximumHeight: height
+    maximumWidth: width
+
+    minimumHeight: height
+    minimumWidth: width
+
     StackView {
         id: stack
         initialItem: mainScreen
@@ -23,6 +29,15 @@ Window {
             stack.pop();
         }
         buttonClose.onClicked: {
+            const currentIndex = mainScreen.currentIndex;
+            if (!employeeModel.isValid(currentIndex)) {
+                countryModel.setCheckCounties([]);
+                stack.pop();
+                return;
+            }
+            const cntList = meddiator.getCountries(currentIndex);
+            countryModel.setCheckCounties(cntList);
+
             stack.pop();
         }
         visible: false
@@ -31,9 +46,27 @@ Window {
     InsertScreen {
         id: insertScreen
         buttonSave.onClicked: {
+            const currentIndex = mainScreen.currentIndex;
+            if (!employeeModel.isValid(currentIndex)) {
+                countryModel.setCheckCounties([]);
+                stack.pop();
+                return;
+            }
+            const cntList = meddiator.getCountries(currentIndex);
+            countryModel.setCheckCounties(cntList);
+
             stack.pop();
         }
         buttonClose.onClicked: {
+            const currentIndex = mainScreen.currentIndex;
+            if (!employeeModel.isValid(currentIndex)) {
+                countryModel.setCheckCounties([]);
+                stack.pop();
+                return;
+            }
+            const cntList = meddiator.getCountries(currentIndex);
+            countryModel.setCheckCounties(cntList);
+
             stack.pop();
         }
         visible: false
@@ -43,6 +76,13 @@ Window {
         id: mainScreen
 
         buttonInsert.onClicked:  {
+
+            insertScreen.firstNameText  = "";
+            insertScreen.lastNameText = "";
+            insertScreen.addressText = "";
+            insertScreen.phoneText = "";
+            insertScreen.maritalStatusText = "";
+
             countryModel.setCheckCounties([]);
             stack.push( insertScreen )
         }

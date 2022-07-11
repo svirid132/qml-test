@@ -1,5 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
+import QtQuick.Dialogs 1.1
 
 Rectangle {
     id: rectangle
@@ -28,9 +29,12 @@ Rectangle {
             text: qsTr("Удалить")
             onClicked: {
                 const currentIndex = listView.currentIndex;
+                if (!employeeModel.isValid(currentIndex)) return;
                 if (meddiator.deleteEmployee(currentIndex)) {
-                    console.log("delete employee!!!");
-                };
+                    dialogSuccess.open();
+                } else {
+                    dialogError.open();
+                }
             }
         }
 
@@ -61,9 +65,15 @@ Rectangle {
         anchors.leftMargin: 10
         anchors.topMargin: 10
         onCurrentItemChanged: {
-            console.log("Hello");
             const index = listView.currentIndex;
-            if (!employeeModel.isValid(index)) return;
+            if (employeeModel === null) return;
+            if (!employeeModel.isValid(index)) {
+                address.text = "";
+                phone.text = "";
+                maritalStatus.text = "";
+                countryModel.setCheckCounties([]);
+                return;
+            }
             const empList = meddiator.getEmployee(index);
             address.text = empList[2];
             phone.text = empList[3];
@@ -74,16 +84,17 @@ Rectangle {
 
         delegate: Item {
             x: 5
-            width: 80
+            width: listView.width
             height: 40
             Rectangle {
                 width: parent.width
                 height: parent.height
                 color: listView.currentIndex === index ? "#D1C400" : "#D1C4E9";
                 Text {
-                    anchors.centerIn: parent
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
+                    anchors.fill: parent
                     text: firstName + ' ' + lastName
-                    anchors.verticalCenter: parent.verticalCenter
                     font.bold: true
                 }
                 MouseArea {
@@ -95,10 +106,6 @@ Rectangle {
             }
         }
         model: employeeModel
-
-        onModelChanged: {
-            console.log("update!!");
-        }
     }
 
     Rectangle {
@@ -124,10 +131,6 @@ Rectangle {
 
             GroupText {
                 id: address
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
                 title: "Улица:"
                 text: ""
                 readOnly: true
@@ -135,10 +138,6 @@ Rectangle {
 
             GroupText {
                 id: phone
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
                 title: "Телефон:"
                 text: ""
                 readOnly: true
@@ -146,77 +145,32 @@ Rectangle {
 
             GroupText {
                 id: maritalStatus
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
                 title: "Cемейное положение:"
                 text: ""
                 readOnly: true
             }
         }
 
-        Column {
-            id: column4
+        ListCountries {
             width: 200
-            height: 150
+            height: 160
+            enabled: false
+            anchors.rightMargin: 10
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            spacing: 10
-            anchors.rightMargin: 10
-            anchors.leftMargin: 10
-            anchors.bottomMargin: 10
-
-            Text {
-                id: text4
-                text: qsTr("Список посещенных стран:")
-                anchors.left: parent.left
-                anchors.right: parent.right
-                font.pixelSize: 16
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
-            }
-            ListView {
-                id: listView1
-                anchors.left: parent.left
-                anchors.right: parent.right
-                anchors.top: text4.bottom
-                anchors.bottom: parent.bottom
-                spacing: 5
-                boundsBehavior: Flickable.StopAtBounds
-                flickableDirection: Flickable.VerticalFlick
-                interactive: true
-                clip: true
-                anchors.topMargin: 5
-                anchors.rightMargin: 0
-                anchors.leftMargin: 0
-                anchors.bottomMargin: 0
-                delegate: Item {
-                    x: 5
-                    width: 80
-                    height: 40
-                    Row {
-                        id: row2
-
-                        Text {
-                            text: model.name
-                            anchors.verticalCenter: parent.verticalCenter
-                            font.bold: true
-                        }
-
-                        CheckBox {
-                            id: checkBox
-                            checked: model.isCheck
-                            enabled: false;
-                            anchors.verticalCenter: parent.verticalCenter
-                        }
-                        spacing: 10
-                    }
-                }
-                model: countryModel
-            }
-
         }
+    }
+
+    MessageDialog {
+        id: dialogSuccess
+        title: "Успешно"
+        text: "Операция прошла успешно"
+    }
+
+    MessageDialog {
+        id: dialogError
+        title: "Ошибка"
+        text: "Операция не выполнена"
     }
 }

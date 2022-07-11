@@ -6,5 +6,6 @@
         <file>UpdateScreen.qml</file>
         <file>InsertScreen.qml</file>
         <file>script.mjs</file>
+        <file>ListCountries.qml</file>
     </qresource>
 </RCC>

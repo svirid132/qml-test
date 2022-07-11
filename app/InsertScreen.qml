@@ -12,6 +12,13 @@ Rectangle {
     property alias buttonClose: buttonClose
     property alias buttonSave: buttonSave
 
+    property int currentIndex: 0
+    property alias firstNameText: firstName.text
+    property alias lastNameText: lastName.text
+    property alias addressText: address.text
+    property alias phoneText: phone.text
+    property alias maritalStatusText: maritalStatus.text
+
     Text {
         id: text1
         text: "Добавить Сотрудника"
@@ -39,6 +46,7 @@ Rectangle {
 
         GroupText {
             id: firstName
+            text: firstNameText
             title: "Имя"
         }
 
@@ -63,59 +71,14 @@ Rectangle {
         }
     }
 
-    Column {
-        id: column
+    ListCountries {
+        anchors.top: grid.bottom
+        anchors.topMargin: 10
+        anchors.bottom: row.top
+        anchors.bottomMargin: 10
+        width: 620
         x: 10
         y: 224
-        width: 620
-        height: 169
-        spacing: 10
-
-        Text {
-            id: text2
-            text: qsTr("Странны, в которых был")
-            anchors.left: parent.left
-            anchors.right: parent.right
-            font.pixelSize: 16
-            anchors.rightMargin: 0
-            anchors.leftMargin: 0
-        }
-        ListView {
-            id: listView
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.top: text2.bottom
-            anchors.bottom: parent.bottom
-            clip: true
-            anchors.topMargin: 10
-            boundsBehavior: Flickable.StopAtBounds
-            anchors.bottomMargin: 0
-            anchors.rightMargin: 0
-            anchors.leftMargin: 0
-            delegate: Item {
-                x: 5
-                width: 80
-                height: 40
-                Row {
-                    id: row1
-                    spacing: 10
-                    Text {
-                        text: model.name
-                        anchors.verticalCenter: parent.verticalCenter
-                    }
-
-                    CheckBox {
-                        id: checkBox
-                        checked: model.isCheck
-                        anchors.verticalCenter: parent.verticalCenter
-                        onToggled: {
-                            countryModel.setCheck(index, checkBox.checked);
-                        }
-                    }
-                }
-            }
-            model: countryModel
-        }
     }
 
     Row {
