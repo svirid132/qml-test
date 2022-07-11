@@ -2,8 +2,7 @@
 #define SQLRENAMER_H
 
 #include <QPair>
-
-class QStringList;
+#include <QStringList>
 
 struct Employee;
 struct Additionally;

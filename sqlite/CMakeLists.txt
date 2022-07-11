@@ -6,7 +6,8 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(Qt5 COMPONENTS Core Sql REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Sql REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Sql REQUIRED)
 
 add_library(sqlite
         sqlitemanager.cpp
@@ -18,7 +19,7 @@ target_include_directories(sqlite
         INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}
         )
 
-target_link_libraries(sqlite PRIVATE Qt5::Core Qt5::Sql)
+target_link_libraries(sqlite PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Sql)
 
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
     install(TARGETS sqlite)
