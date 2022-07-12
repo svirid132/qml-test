@@ -6,7 +6,9 @@
 #include <QObject>
 //#include <QtQml/qqml.h>
 
-//Не работает с Qt 5.15.2 + cmake
+// Не работает с Qt 5.15.2 + cmake
+// https://stackoverflow.com/questions/63509161/how-to-use-qml-element-with-cmake
+// Пришлось отказаться от этой идеи и использовать QStringList
 class M_Employee : public QObject {
     Q_OBJECT
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName)

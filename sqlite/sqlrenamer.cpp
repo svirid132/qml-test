@@ -15,7 +15,7 @@ QStringList SQLRenamer::updateEmployee(const QPair<Employee, Additionally>& empl
 {
     QFile file(":/update/employee.sql");
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "dont open employee.sql!";
+        qDebug() << "dont open file!";
     }
     QString execCmd = QString(file.readAll());
     execCmd = execCmd.simplified();
@@ -45,11 +45,7 @@ QStringList SQLRenamer::updateEmployee(const QPair<Employee, Additionally>& empl
         QString before = "(31, 133), (40, 133)";
         replace(execCmd, before, strValues);
     }
-    qDebug() << "execCmd:";
     QStringList list = execCmd.split(";", Qt::SkipEmptyParts);
-    for (QString str: list) {
-        qDebug() << "string Update:" << str;
-    }
     return list;
 }
 
@@ -57,7 +53,7 @@ QStringList SQLRenamer::deleteEmployee(int idEmployee, int idAdditionally)
 {
     QFile file(":/delete/employee.sql");
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "dont open employee.sql!";
+        qDebug() << "dont open file!";
     }
     QString execCmd = QString(file.readAll());
     execCmd = execCmd.simplified();
@@ -75,7 +71,7 @@ QStringList SQLRenamer::insertEmployee(const QPair<Employee, Additionally> &empl
 {
     QFile file(":/insert/employee.sql");
     if (!file.open(QIODevice::ReadOnly)) {
-        qDebug() << "dont open employee.sql!";
+        qDebug() << "dont open file!";
     }
     QString execCmd = QString(file.readAll());
     execCmd = execCmd.simplified();

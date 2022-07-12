@@ -99,7 +99,7 @@ QList<QPair<Employee, Additionally>> SQLiteManager::execSelectEmployees()
     if (error.isValid()) return QList<QPair<Employee, Additionally>>();
     QSqlQuery q;
     if (!q.exec(execCmd)) {
-        qDebug() << "execSelectEmployees:" <<q.lastError();
+        qDebug() << "execSelectEmployees:" << q.lastError();
     }
     QList<QPair<Employee, Additionally>> employees;
     while (q.next()) {
@@ -147,7 +147,7 @@ QPair<Employee, Additionally> SQLiteManager::execSelectLastEmp()
     if (error.isValid()) return QPair<Employee, Additionally>();
     QSqlQuery q;
     if (!q.exec(execCmd)) {
-        qDebug() << "execSelectEmployee:" << q.lastError();
+        qDebug() << "execSelectLastEmp:" << q.lastError();
     }
     q.next();
     Employee emp;
