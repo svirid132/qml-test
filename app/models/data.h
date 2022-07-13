@@ -3,6 +3,7 @@
 
 #include <QString>
 
+//Структура для модели countrymodel
 struct CountryData {
     int code;
     QString country;

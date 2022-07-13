@@ -1,57 +1,48 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
+import Elems 1.0
 
 Rectangle {
-    id: rectangle
-    width: 640
-    height: 440
+    id: root
+    width: parent.width
+    height: parent.height
 
-    property int currentIndex: 0
+    signal clickUpdate(int indexRow)
+
+    property MEmployee memployee
     property alias buttonUpdate: buttonUpdate
     property alias buttonInsert: buttonInsert
 
-    signal clickUpdate(int indexRow)
-    property alias empIndex: listView.currentIndex
+    function clickLastEmp() {
+        listView.currentIndex = listView.model.rowCount() - 1;
+        updateView();
+    }
 
-    Row {
-        id: row
-        x: 273
-        y: 377
-        width: 334
-        height: 60
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: 3
-        spacing: 9
-
-        Button {
-            id: button
-            text: qsTr("Удалить")
-            onClicked: {
-                const currentIndex = listView.currentIndex;
-                if (!employeeModel.isValid(currentIndex)) return;
-                if (meddiator.deleteEmployee(currentIndex)) {
-                    dialogSuccess.open();
-                } else {
-                    dialogError.open();
-                }
-            }
+    function updateView() {
+        const index = listView.currentIndex;
+        if (employeeModel === null) return;
+        if (!employeeModel.isValid(index)) {
+            clearData();
+            return;
         }
+        meddiator.updateMEmployee(index, memployee);
+        updateBindMEmployee();
+    }
 
-        Button {
-            id: buttonUpdate
-            text: qsTr("Редактировать")
-            onClicked: {
-                const index = listView.currentIndex;
-                if (!employeeModel.isValid(index)) return;
-                rectangle.clickUpdate(index);
-            }
-        }
+    function clearData() {
+        address.text = "";
+        phone.text = "";
+        maritalStatus.text = "";
+        countryModel.setCheckCounties([]);
+    }
 
-        Button {
-            id: buttonInsert
-            text: "Добваить"
-        }
+    function updateBindMEmployee() {
+        address.text = memployee.address;
+        phone.text = memployee.phone;
+        maritalStatus.text = memployee.maritalStatus;
+        const codes = memployee.countryCodes;
+        countryModel.setCheckCounties(codes);
     }
 
     ListView {
@@ -64,23 +55,8 @@ Rectangle {
         spacing: 10
         anchors.leftMargin: 10
         anchors.topMargin: 10
-        onCurrentItemChanged: {
-            const index = listView.currentIndex;
-            if (employeeModel === null) return;
-            if (!employeeModel.isValid(index)) {
-                address.text = "";
-                phone.text = "";
-                maritalStatus.text = "";
-                countryModel.setCheckCounties([]);
-                return;
-            }
-            const empList = meddiator.getEmployee(index);
-            address.text = empList[2];
-            phone.text = empList[3];
-            maritalStatus.text = empList[4];
-            const cntList = meddiator.getCountries(index);
-            countryModel.setCheckCounties(cntList);
-        }
+//        onCurrentItemChanged: {
+//        }
 
         delegate: Item {
             x: 5
@@ -101,32 +77,34 @@ Rectangle {
                     anchors.fill: parent
                     onClicked: {
                         listView.currentIndex = index;
+                        updateView();
                     }
                 }
             }
         }
         model: employeeModel
+        Component.onCompleted: {
+            updateView();
+        }
     }
 
     Rectangle {
-        id: rectangle1
+        id: additional
         x: 219
-        width: 405
-        height: 350
-        anchors.right: parent.right
-        anchors.top: parent.top
+        width: 400
+        anchors.right: root.right
+        anchors.top: root.top
+        anchors.bottom: row.top
         anchors.rightMargin: 10
-        anchors.topMargin: 10
+        anchors.topMargin: 5
+        anchors.leftMargin: 5
 
         Column {
-            id: column3
+            id: column
             height: 173
             anchors.left: parent.left
             anchors.right: parent.right
             anchors.top: parent.top
-            anchors.topMargin: 5
-            anchors.rightMargin: 5
-            anchors.leftMargin: 5
             spacing: 10
 
             GroupText {
@@ -152,15 +130,54 @@ Rectangle {
         }
 
         ListCountries {
-            width: 200
-            height: 160
+            width: additional.width
+            height: additional.height - column.height - 20
             enabled: false
-            anchors.rightMargin: 10
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.bottom: parent.bottom
+            anchors.top: column.bottom
+            anchors.topMargin: 5
         }
     }
+
+    Row {
+        id: row
+        x: 273
+        width: 334
+        anchors.bottom: root.bottom
+        anchors.bottomMargin: 10
+        spacing: 9
+
+        Button {
+            id: buttonDelete
+            text: qsTr("Удалить")
+            onClicked: {
+                const currentIndex = listView.currentIndex;
+                if (!employeeModel.isValid(currentIndex)) return;
+                if (meddiator.deleteEmployee(currentIndex)) {
+                    dialogSuccess.open();
+                    listView.currentIndex = currentIndex - 1;
+                    updateView();
+                } else {
+                    dialogError.open();
+                }
+            }
+        }
+
+        Button {
+            id: buttonUpdate
+            text: qsTr("Редактировать")
+            onClicked: {
+                const index = listView.currentIndex;
+                if (!employeeModel.isValid(index)) return;
+                root.clickUpdate(index);
+            }
+        }
+
+        Button {
+            id: buttonInsert
+            text: "Добваить"
+        }
+    }
+
 
     MessageDialog {
         id: dialogSuccess

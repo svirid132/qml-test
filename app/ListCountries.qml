@@ -8,19 +8,19 @@ Rectangle {
     border.color: "black"
 
     Column {
-        id: column4
+        id: column
         anchors.fill: parent
 
         Text {
-            id: text4
+            id: title
             text: qsTr("  Список посещенных стран:")
             font.pixelSize: 16
         }
 
         ListView {
-            id: listView1
+            id: listView
             width: rect.width
-            height: rect.height - text4.height
+            height: rect.height - title.height
             spacing: 5
             boundsBehavior: Flickable.StopAtBounds
             flickableDirection: Flickable.VerticalFlick

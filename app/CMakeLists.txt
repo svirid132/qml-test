@@ -19,6 +19,7 @@ set(PROJECT_SOURCES
         models/countrymodel.cpp
         models/employeemodel.cpp
         meddiator.cpp
+        elements/memployee.cpp
         qml.qrc
 )
 

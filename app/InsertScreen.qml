@@ -1,26 +1,34 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
-import "script.mjs" as Script
 import QtQuick.Dialogs 1.3
+import Elems 1.0
 
 Rectangle {
-    id: rectangle
-    width: 640
-    height: 440
+    id: root
+    width: parent.width
+    height: parent.height
     color: "#c2c2c2"
 
-    property alias buttonClose: buttonClose
-    property alias buttonSave: buttonSave
+    signal clickedSave(bool success)
 
-    property int currentIndex: 0
-    property alias firstNameText: firstName.text
-    property alias lastNameText: lastName.text
-    property alias addressText: address.text
-    property alias phoneText: phone.text
-    property alias maritalStatusText: maritalStatus.text
+    property alias buttonClose: buttonClose
+
+    function clearData() {
+        firstName.text = "";
+        lastName.text = "";
+        address.text = "";
+        phone.text = "";
+        maritalStatus.text = "";
+        const codes = [];
+        countryModel.setCheckCounties(codes);
+    }
+
+    MEmployee {
+        id: memployee
+    }
 
     Text {
-        id: text1
+        id: title
         text: "Добавить Сотрудника"
         anchors.left: parent.left
         anchors.top: parent.top
@@ -34,7 +42,7 @@ Rectangle {
         height: 172
         anchors.left: parent.left
         anchors.right: parent.right
-        anchors.top: text1.bottom
+        anchors.top: title.bottom
         anchors.rightMargin: 10
         anchors.leftMargin: 10
         anchors.topMargin: 10
@@ -46,7 +54,6 @@ Rectangle {
 
         GroupText {
             id: firstName
-            text: firstNameText
             title: "Имя"
         }
 
@@ -73,7 +80,7 @@ Rectangle {
 
     ListCountries {
         anchors.top: grid.bottom
-        anchors.topMargin: 10
+        anchors.topMargin: 15
         anchors.bottom: row.top
         anchors.bottomMargin: 10
         width: 620
@@ -90,7 +97,7 @@ Rectangle {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.rightMargin: 0
-        anchors.bottomMargin: 5
+        anchors.bottomMargin: 10
         spacing: 20
 
         Button {
@@ -105,11 +112,20 @@ Rectangle {
             height: 41
             text: "Сохранитьs"
             onClicked: {
-                const listEmp = Script.getListEmp(firstName.text, lastName.text, address.text, phone.text, maritalStatus.text);
-                const listCnts = countryModel.getCheckCounties();
-                if (meddiator.saveEmployee(listEmp, listCnts)) {
+
+                memployee.firstName = firstName.text;
+                memployee.lastName = lastName.text;
+                memployee.address = address.text;
+                memployee.phone = phone.text;
+                memployee.maritalStatus = maritalStatus.text;
+                const cnts = countryModel.getCheckCounties();
+                memployee.countryCodes = cnts;
+
+                if (meddiator.saveEmployee(memployee)) {
+                    clickedSave(true);
                     dialogSuccess.open();
                 } else {
+                    clickedSave(false);
                     dialogError.open();
                 }
             }

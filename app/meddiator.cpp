@@ -36,14 +36,17 @@ Meddiator::Meddiator(QQmlApplicationEngine& app, QObject *parent)
     app.rootContext()->setContextProperty("employeeModel", &empModel);
 }
 
-QStringList Meddiator::getEmployee(int rowIndex)
+void Meddiator::updateMEmployee(int rowIndex, MEmployee *memp)
 {
-    QStringList list;
     Employee emp = empModel.getEmp(rowIndex);
     Additionally add = adds[emp.additionally_id];
-    list << emp.firstName << emp.lastName << add.address << add.phone << add.maritalStatus;
 
-    return list;
+    memp->setFirstName(emp.firstName);
+    memp->setLastName(emp.lastName);
+    memp->setAddress(add.address);
+    memp->setPhone(add.phone);
+    memp->setMaritalStatus(add.maritalStatus);
+    memp->setCountryCodes(add.codeCountries);
 }
 
 QList<int> Meddiator::getCountries(int rowIndex)
@@ -54,16 +57,16 @@ QList<int> Meddiator::getCountries(int rowIndex)
     return add.codeCountries;
 }
 
-bool Meddiator::updateEmployee(int rowIndex, QStringList empList, QList<int> codeCountries)
+bool Meddiator::updateEmployee(int rowIndex, MEmployee* memp)
 {
     Employee emp = empModel.getEmp(rowIndex);
-    emp.firstName = empList.at(0);
-    emp.lastName = empList.at(1);
+    emp.firstName = memp->firstName();
+    emp.lastName = memp->lastName();
     Additionally add = adds[emp.additionally_id];
-    add.address = empList.at(2);
-    add.phone = empList.at(3);
-    add.maritalStatus = empList.at(4);
-    add.codeCountries = codeCountries;
+    add.address = memp->address();
+    add.phone = memp->phone();
+    add.maritalStatus = memp->maritalStatus();
+    add.codeCountries = memp->countryCodes();
 
     QSqlError error = manager.execUpdateEmployee({emp, add});
     if (error.isValid()) {
@@ -76,16 +79,16 @@ bool Meddiator::updateEmployee(int rowIndex, QStringList empList, QList<int> cod
     return true;
 }
 
-bool Meddiator::saveEmployee(const QStringList &empList, const QList<int> &codeCountries)
+bool Meddiator::saveEmployee(MEmployee* memp)
 {
     Employee emp;
-    emp.firstName = empList.at(0);
-    emp.lastName = empList.at(1);
+    emp.firstName = memp->firstName();
+    emp.lastName = memp->lastName();
     Additionally add;
-    add.address = empList.at(2);
-    add.phone = empList.at(3);
-    add.maritalStatus = empList.at(4);
-    add.codeCountries = codeCountries;
+    add.address = memp->address();
+    add.phone = memp->phone();
+    add.maritalStatus = memp->maritalStatus();
+    add.codeCountries = memp->countryCodes();
 
     QSqlError error = manager.execInsertEmployee({emp, add});
     if(error.isValid()) {
