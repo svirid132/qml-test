@@ -54,7 +54,6 @@ public:
     Q_INVOKABLE bool deleteEmployee(int rowIndex);
 
 private:
-    SQLiteManager manager;
     EmployeeModel empModel;
     CountryModel countryModel;
     QMap<int, Additionally> adds;

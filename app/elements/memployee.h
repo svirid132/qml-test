@@ -28,7 +28,7 @@ signals:
     void changedMaritalStatus();
 
 private:
-    QString m_firstName = "";
+    QString m_firstName = "sasha";
     QString m_lastName = "";
     QString m_address = "";
     QString m_phone;

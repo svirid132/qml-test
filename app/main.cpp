@@ -3,9 +3,11 @@
 #include <QtSql>
 #include <datasqlite.h>
 #include <sqlitemanager.h>
+#include <controllers/selectedusercontroller.h>
 #include "meddiator.h"
 #include "dataMeddiator.h"
 #include "elements/memployee.h"
+#include <datasqlite.h>
 
 int main(int argc, char *argv[])
 {
@@ -14,7 +16,17 @@ int main(int argc, char *argv[])
 #endif
     QGuiApplication app(argc, argv);
 
+    SQLiteManager manager = SQLiteManager::getInstance();
+    QSqlError error = manager.initDB();
+
+    if (error.isValid()) {
+        qDebug() << error.text();
+        return 1;
+    }
+
     qmlRegisterType<MEmployee>("Elems", 1, 0, "MEmployee");
+    qmlRegisterUncreatableType<MEmployee>("Elems", 1, 0, "Employee", "dont create Employee");
+    qmlRegisterType<SelectedUserController>("Controllers", 1, 0, "SelectedUserController");
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));

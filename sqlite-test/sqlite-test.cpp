@@ -15,7 +15,7 @@ class SQLiteTest : public QObject
     Q_OBJECT
 
 private:
-    SQLiteManager manager;
+    SQLiteManager manager = SQLiteManager::getInstance();
     Employee emp_1;
     Additionally add_1;
     Employee emp_2;

@@ -3,6 +3,14 @@
 EmployeeModel::EmployeeModel(QObject *parent)
     : QAbstractTableModel{parent}
 {
+    //Инцилизируем модель
+    QList<QPair<Employee, Additionally>> listPairEmp = manager.execSelectEmployees();
+    for (int i = 0; i < listPairEmp.size(); ++i) {
+        Employee emp = listPairEmp[i].first;
+        insertEmp(emp);
+//        Additionally add = listPairEmp[i].second;
+//        adds[emp.additionally_id] = add;
+    }
 
 }
 

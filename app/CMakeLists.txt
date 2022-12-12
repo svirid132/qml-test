@@ -16,6 +16,10 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Sql Quick REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
+        models/infoemployeemodel.cpp
+        models/infoemployeemodel.h
+        controllers/selectedusercontroller.cpp
+        controllers/selectedusercontroller.h
         models/countrymodel.cpp
         models/employeemodel.cpp
         meddiator.cpp

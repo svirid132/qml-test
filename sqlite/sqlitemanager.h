@@ -17,7 +17,10 @@ class QString;
 class SQLiteManager
 {
 public:
-    SQLiteManager();
+    static SQLiteManager& getInstance() {
+        static SQLiteManager instance;
+        return instance;
+    }
 
     /**
      * @brief isDriverExit - проверяет существование драйвера sqlite
@@ -66,6 +69,7 @@ public:
     QSqlError execDeleteEmployee(int idEmployee, int idAdditional);
 
 private:
+    SQLiteManager();
     SQLRenamer renamer;
 
     /**

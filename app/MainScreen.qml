@@ -2,6 +2,7 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
 import Elems 1.0
+import Controllers 1.0
 
 Rectangle {
     id: root
@@ -86,6 +87,18 @@ Rectangle {
         Component.onCompleted: {
             updateView();
         }
+    }
+
+    MEmployee {
+        id: emp
+    }
+
+    SelectedUserController {
+        id: selectedUserController
+
+        infoViewer: empView
+        selectedIndexEmpModel: -1
+        model: employeeModel
     }
 
     Rectangle {

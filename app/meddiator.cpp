@@ -23,13 +23,6 @@ Meddiator::Meddiator(QQmlApplicationEngine& app, QObject *parent)
     countryModel.setCountryDatas(listCoyntryDatas);
 
     //заполнение модели сотрудниками
-    QList<QPair<Employee, Additionally>> listPairEmp = manager.execSelectEmployees();
-    for (int i = 0; i < listPairEmp.size(); ++i) {
-        Employee emp = listPairEmp[i].first;
-        Additionally add = listPairEmp[i].second;
-        empModel.insertEmp(emp);
-        adds[emp.additionally_id] = add;
-    }
 
     app.rootContext()->setContextProperty("meddiator", this);
     app.rootContext()->setContextProperty("countryModel", &countryModel);

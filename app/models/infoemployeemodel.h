@@ -1,26 +1,18 @@
-#ifndef EMPLOYEEMODEL_H
-#define EMPLOYEEMODEL_H
+#ifndef INFOEMPLOYEEMODEL_H
+#define INFOEMPLOYEEMODEL_H
 
 #include <QAbstractItemModel>
 #include <QObject>
 #include <sqlitemanager.h>
 #include "datasqlite.h"
 
-class EmployeeModel : public QAbstractTableModel
+class InfoEmployeeModel : public QObject
 {
     Q_OBJECT
 public:
-    explicit EmployeeModel(QObject *parent = nullptr);
+    explicit InfoEmployeeModel(QObject *parent = nullptr);
 
-signals:
-
-    // QAbstractItemModel interface
 public:
-    Q_INVOKABLE int rowCount(const QModelIndex &parent = QModelIndex()) const;
-    Q_INVOKABLE int columnCount(const QModelIndex &parent) const;
-    Q_INVOKABLE QVariant data(const QModelIndex &index, int role) const;
-    QHash<int, QByteArray> roleNames() const;
-
     /**
      * @brief insertEmp - Добавить в модель сотрудника
      * @param emp
@@ -53,6 +45,7 @@ private:
         idAdditionallyRole = Qt::UserRole + 3
     };
     SQLiteManager manager = SQLiteManager::getInstance();
+    QMap<int, Additionally> adds;
 
     // QAbstractItemModel interface
 public:
@@ -70,4 +63,4 @@ public:
     Q_INVOKABLE bool isValid(int row);
 };
 
-#endif // EMPLOYEEMODEL_H
+#endif // INFOEMPLOYEEMODEL_H
