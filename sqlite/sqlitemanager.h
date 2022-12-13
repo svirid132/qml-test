@@ -11,10 +11,14 @@ class QSqlError;
 class QSqlDatabase;
 class QString;
 
+namespace SQLite {
+    class SQLiteManager;
+}
+
 /**
  * @brief The SQLiteManager class - основной класс для обращение к бд
  */
-class SQLiteManager
+class SQLite::SQLiteManager
 {
 public:
     static SQLiteManager& getInstance() {

@@ -6,9 +6,13 @@
 #include <QString>
 #include <QStringList>
 
+inline void initMyResource() { Q_INIT_RESOURCE(res); }
+
+using namespace SQLite;
+
 SQLRenamer::SQLRenamer()
 {
-    Q_INIT_RESOURCE(res);
+    initMyResource();
 }
 
 QStringList SQLRenamer::updateEmployee(const QPair<Employee, Additionally>& employee)

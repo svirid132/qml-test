@@ -10,6 +10,9 @@ find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Sql REQUIRED)
 find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Sql REQUIRED)
 
 add_library(sqlite
+        sqlrenamer.h
+        sqlitemanager.h
+        datasqlite.h
         sqlitemanager.cpp
         sqlrenamer.cpp
         res.qrc

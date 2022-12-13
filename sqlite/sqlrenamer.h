@@ -7,11 +7,15 @@
 struct Employee;
 struct Additionally;
 
+namespace SQLite {
+    class SQLRenamer;
+}
+
 /**
  * @brief The SQLRenamer class - класс, предназначенный для считывания sql файлов.
  * И заполнению считаных данных новыми данными.
  */
-class SQLRenamer
+class SQLite::SQLRenamer
 {
 public:
     SQLRenamer();

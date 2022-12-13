@@ -5,7 +5,13 @@
 #include <QList>
 #include <QString>
 
-struct Additionally {
+namespace SQLite {
+    struct Additionally;
+    struct Country;
+    struct Employee;
+}
+
+struct SQLite::Additionally {
     int id = -1;
     QString address = "";
     QString phone = "";
@@ -33,7 +39,7 @@ struct Additionally {
     }
 };
 
-struct Country {
+struct SQLite::Country {
     int code;
     QString name;
     bool operator==(const Country& rhs) const {
@@ -42,7 +48,7 @@ struct Country {
     };
 };
 
-struct Employee {
+struct SQLite::Employee {
     int id = -1;
     QString firstName;
     QString lastName;

@@ -14,9 +14,12 @@
 #include <QSqlQuery>
 #include <QStringList>
 
-SQLiteManager::SQLiteManager()
+inline void initMyResource() { Q_INIT_RESOURCE(res); }
+
+namespace SQLite {
+SQLite::SQLiteManager::SQLiteManager()
 {
-    Q_INIT_RESOURCE(res);
+    initMyResource();
 }
 
 bool SQLiteManager::isDriverExit() {
@@ -87,7 +90,7 @@ QSqlError SQLiteManager::execInsertEmployee(const QPair<Employee, Additionally>&
     return QSqlError();
 }
 
-QList<QPair<Employee, Additionally>> SQLiteManager::execSelectEmployees()
+QList<QPair<SQLite::Employee, SQLite::Additionally>> SQLiteManager::execSelectEmployees()
 {
     QFile file(":/select/employees.sql");
     if (!file.open(QIODevice::ReadOnly)) {
@@ -135,7 +138,7 @@ QList<QPair<Employee, Additionally>> SQLiteManager::execSelectEmployees()
     return employees;
 }
 
-QPair<Employee, Additionally> SQLiteManager::execSelectLastEmp()
+QPair<SQLite::Employee, SQLite::Additionally> SQLiteManager::execSelectLastEmp()
 {
     QFile file(":/select/last_employee.sql");
     if (!file.open(QIODevice::ReadOnly)) {
@@ -285,4 +288,5 @@ QSqlError SQLiteManager::commitTransaction()
     QSqlQuery q;
     q.exec("COMMIT;");
     return q.lastError();
+}
 }

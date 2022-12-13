@@ -1,7 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
-import Model 1.0
+import Elems 1.0
+import Controllers 1.0
 
 Rectangle {
     id: root
@@ -10,6 +11,7 @@ Rectangle {
 
     signal clickUpdate(int indexRow)
 
+    property MEmployee memployee
     property alias buttonUpdate: buttonUpdate
     property alias buttonInsert: buttonInsert
 
@@ -42,10 +44,6 @@ Rectangle {
         maritalStatus.text = memployee.maritalStatus;
         const codes = memployee.countryCodes;
         countryModel.setCheckCounties(codes);
-    }
-
-    EmpModel {
-        id: empModel
     }
 
     ListView {
@@ -85,20 +83,23 @@ Rectangle {
                 }
             }
         }
-        model: empModel
+        model: employeeModel
         Component.onCompleted: {
             updateView();
         }
     }
 
+    MEmployee {
+        id: emp
+    }
 
-//    SelectedUserController {
-//        id: selectedUserController
+    SelectedUserController {
+        id: selectedUserController
 
-//        infoViewer: empView
-//        selectedIndexEmpModel: -1
-//        model: employeeModel
-//    }
+        infoViewer: empView
+        selectedIndexEmpModel: -1
+        model: employeeModel
+    }
 
     Rectangle {
         id: additional

@@ -16,11 +16,19 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Sql Quick REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
-        controllers/getadditionalempcontroller.h controllers/getadditionalempcontroller.cpp
-        view/additionalemp.cpp view/additionalemp.h
-        view/employee.h view/employee.cpp
         models/empmodel.h models/empmodel.cpp
-        models/countrymodel.cpp models/countrymodel.h
+        view/employee.h view/employee.cpp
+        controllers/getadditionalempcontroller.h
+        controllers/getadditionalempcontroller.cpp
+        models/infoemployeemodel.cpp
+        models/infoemployeemodel.h
+        view/additionalemp.cpp
+        view/additionalemp.h
+#        controllers/selectedusercontroller.cpp controllers/selectedusercontroller.h
+        models/countrymodel.cpp
+        models/employeemodel.cpp
+        meddiator.cpp
+        elements/memployee.cpp
         qml.qrc
 )
 

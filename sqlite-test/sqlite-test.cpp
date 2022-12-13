@@ -10,19 +10,21 @@
 //int *const ptr - константные указатели
 //const int *ptr - константные значения
 
+using namespace SQLite;
+
 class SQLiteTest : public QObject
 {
     Q_OBJECT
 
 private:
-    SQLiteManager manager = SQLiteManager::getInstance();
-    Employee emp_1;
-    Additionally add_1;
-    Employee emp_2;
-    Additionally add_2;
+    SQLite::SQLiteManager manager = SQLite::SQLiteManager::getInstance();
+    SQLite::Employee emp_1;
+    SQLite::Additionally add_1;
+    SQLite::Employee emp_2;
+    SQLite::Additionally add_2;
 
-    bool isCompareEmployee(const QPair<Employee, Additionally>& before, const QPair<Employee, Additionally>& after);
-    void checkSelect(const QList<QPair<Employee, Additionally>>& afterList);
+    bool isCompareEmployee(const QPair<SQLite::Employee, SQLite::Additionally>& before, const QPair<SQLite::Employee, SQLite::Additionally>& after);
+    void checkSelect(const QList<QPair<SQLite::Employee, SQLite::Additionally>>& afterList);
 
 private slots:
     void initTestCase();
@@ -34,7 +36,7 @@ private slots:
     void deleteEmps();
 };
 
-bool SQLiteTest::isCompareEmployee(const QPair<Employee, Additionally>& before, const QPair<Employee, Additionally>& after) {
+bool SQLiteTest::isCompareEmployee(const QPair<SQLite::Employee, SQLite::Additionally>& before, const QPair<SQLite::Employee, SQLite::Additionally>& after) {
 //    qDebug() << before.first.id << after.first.id
 //             << before.first.firstName << after.first.firstName
 //             << before.first.lastName << after.first.lastName;
@@ -47,9 +49,9 @@ bool SQLiteTest::isCompareEmployee(const QPair<Employee, Additionally>& before, 
     return (before.first == after.first) && (before.second == after.second);
 }
 
-void SQLiteTest::checkSelect(const QList<QPair<Employee, Additionally>>& beforeList)
+void SQLiteTest::checkSelect(const QList<QPair<SQLite::Employee, SQLite::Additionally>>& beforeList)
 {
-    QList<QPair<Employee, Additionally>> list = manager.execSelectEmployees();
+    QList<QPair<SQLite::Employee, SQLite::Additionally>> list = manager.execSelectEmployees();
     QVERIFY (beforeList.size() == list.size());
 
     for (int i = 0; i < beforeList.size(); ++i) {
@@ -81,9 +83,9 @@ void SQLiteTest::insertEmps()
     add_2.phone = "123 3";
 
     QSqlError error;
-    error = manager.execInsertEmployee(QPair<Employee, Additionally>({emp_1, add_1}));
+    error = manager.execInsertEmployee(QPair<SQLite::Employee, SQLite::Additionally>({emp_1, add_1}));
     QVERIFY (!error.isValid());
-    error = manager.execInsertEmployee(QPair<Employee, Additionally>({emp_2, add_2}));
+    error = manager.execInsertEmployee(QPair<SQLite::Employee, SQLite::Additionally>({emp_2, add_2}));
     QVERIFY (!error.isValid());
 }
 
@@ -93,7 +95,7 @@ void SQLiteTest::selectLastEmp()
     emp_2.additionally_id = 2;
     add_2.id = 2;
 
-    QPair<Employee, Additionally> emp = manager.execSelectLastEmp();
+    QPair<SQLite::Employee, SQLite::Additionally> emp = manager.execSelectLastEmp();
     QVERIFY (isCompareEmployee(emp, {emp_2, add_2}));
 }
 
@@ -129,9 +131,9 @@ void SQLiteTest::updateEmps()
     add_2.codeCountries = {};
 
     QSqlError error;
-    error = manager.execUpdateEmployee(QPair<Employee, Additionally>({emp_1, add_1}));
+    error = manager.execUpdateEmployee(QPair<SQLite::Employee, SQLite::Additionally>({emp_1, add_1}));
     QVERIFY(!error.isValid());
-    error = manager.execUpdateEmployee(QPair<Employee, Additionally>({emp_2, add_2}));
+    error = manager.execUpdateEmployee(QPair<SQLite::Employee, SQLite::Additionally>({emp_2, add_2}));
     QVERIFY(!error.isValid());
     checkSelect({{emp_1, add_1}, {emp_2, add_2}});
 }

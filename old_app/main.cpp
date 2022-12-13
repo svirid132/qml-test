@@ -3,10 +3,12 @@
 #include <QtSql>
 #include <datasqlite.h>
 #include <sqlitemanager.h>
+#include <controllers/selectedusercontroller.h>
 #include <view/additionalemp.h>
+#include "meddiator.h"
 #include "dataMeddiator.h"
+#include "elements/memployee.h"
 #include "models/empmodel.h"
-#include <QSqlError>
 #include <datasqlite.h>
 
 int main(int argc, char *argv[])
@@ -24,32 +26,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
+    qmlRegisterType<MEmployee>("Elems", 1, 0, "MEmployee");
+    qmlRegisterUncreatableType<MEmployee>("Elems", 1, 0, "Employee", "dont create Employee");
+    qmlRegisterType<SelectedUserController>("Controllers", 1, 0, "SelectedUserController");
     qmlRegisterType<AdditionalEmp>("View", 1, 0, "AdditionalEmp");
     qmlRegisterType<EmpModel>("Model", 1, 0, "EmpModel");
-
-//    SQLite::Employee emp_1;
-//    SQLite::Additionally add_1;
-//    SQLite::Employee emp_2;
-//    SQLite::Additionally add_2;
-
-//    emp_1.firstName = "Влидамири";
-//    emp_1.lastName = "Клепиков";
-//    add_1.address = "Крыленко";
-//    add_1.codeCountries = {};
-//    add_1.maritalStatus = "Не женат";
-//    add_1.phone = "123 321";
-
-//    emp_2.firstName = "Владимек_1";
-//    emp_2.lastName = "Клепиков_1";
-//    add_2.address = "Крыленко";
-//    add_2.codeCountries = {895, 410, 498};
-//    add_2.maritalStatus = "женат";
-//    add_2.phone = "123 3";
-
-//    error = manager.execInsertEmployee(QPair<SQLite::Employee, SQLite::Additionally>({emp_1, add_1}));
-//    qDebug() << error.isValid();
-//    error = manager.execInsertEmployee(QPair<SQLite::Employee, SQLite::Additionally>({emp_2, add_2}));
-//    qDebug() << error.isValid();
 
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
@@ -58,6 +39,7 @@ int main(int argc, char *argv[])
         if (!obj && url == objUrl)
             QCoreApplication::exit(-1);
     }, Qt::QueuedConnection);
+    Meddiator meddiator(engine);
     engine.load(url);
 
     return app.exec();
