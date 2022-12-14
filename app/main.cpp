@@ -1,7 +1,10 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QtSql>
+#include <controllers/getadditionalempcontroller.h>
 #include <datasqlite.h>
+#include <models/countrymodel.h>
+#include <puller/employeepuller.h>
 #include <sqlitemanager.h>
 #include <view/additionalemp.h>
 #include "dataMeddiator.h"
@@ -25,7 +28,12 @@ int main(int argc, char *argv[])
     }
 
     qmlRegisterType<AdditionalEmp>("View", 1, 0, "AdditionalEmp");
+    qmlRegisterType<Employee>("View", 1, 0, "Employee");
     qmlRegisterType<EmpModel>("Model", 1, 0, "EmpModel");
+    qmlRegisterType<CountryModel>("Model", 1, 0, "CountryModel");
+    qmlRegisterSingletonInstance<EmpModel>("SingeltonModel", 1, 0, "EditEmpModel", new EmpModel);
+    qmlRegisterType<getAdditionalEmpController>("Controllers", 1, 0, "GetAdditionalEmpController");
+    qmlRegisterType<EmployeePuller>("Puller", 1, 0, "EmployeePuller");
 
 //    SQLite::Employee emp_1;
 //    SQLite::Additionally add_1;

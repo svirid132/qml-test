@@ -4,6 +4,7 @@ import QtQuick.Controls 2.15
 Rectangle {
     id: rect
 
+    property alias model: listView.model
     property bool enabled: true
     border.color: "black"
 
@@ -51,7 +52,7 @@ Rectangle {
                     spacing: 10
                 }
             }
-            model: countryModel
+//            model:
         }
     }
 }

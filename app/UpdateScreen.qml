@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
-import Elems 1.0
 
 Rectangle {
     id: root
@@ -13,7 +12,6 @@ Rectangle {
 
     property alias buttonClose: buttonClose
 
-    property MEmployee memployee
     property int currentIndex
 
     function updateEmp() {

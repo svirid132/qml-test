@@ -16,6 +16,7 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Sql Quick REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
+        puller/employeepuller.h puller/employeepuller.cpp
         controllers/getadditionalempcontroller.h controllers/getadditionalempcontroller.cpp
         view/additionalemp.cpp view/additionalemp.h
         view/employee.h view/employee.cpp

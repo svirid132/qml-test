@@ -2,6 +2,8 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
 import Model 1.0
+import View 1.0
+import Controllers 1.0
 
 Rectangle {
     id: root
@@ -12,40 +14,8 @@ Rectangle {
 
     property alias buttonUpdate: buttonUpdate
     property alias buttonInsert: buttonInsert
+    readonly property var update: function() {
 
-    function clickLastEmp() {
-        listView.currentIndex = listView.model.rowCount() - 1;
-        updateView();
-    }
-
-    function updateView() {
-        const index = listView.currentIndex;
-        if (employeeModel === null) return;
-        if (!employeeModel.isValid(index)) {
-            clearData();
-            return;
-        }
-        meddiator.updateMEmployee(index, memployee);
-        updateBindMEmployee();
-    }
-
-    function clearData() {
-        address.text = "";
-        phone.text = "";
-        maritalStatus.text = "";
-        countryModel.setCheckCounties([]);
-    }
-
-    function updateBindMEmployee() {
-        address.text = memployee.address;
-        phone.text = memployee.phone;
-        maritalStatus.text = memployee.maritalStatus;
-        const codes = memployee.countryCodes;
-        countryModel.setCheckCounties(codes);
-    }
-
-    EmpModel {
-        id: empModel
     }
 
     ListView {
@@ -58,10 +28,14 @@ Rectangle {
         spacing: 10
         anchors.leftMargin: 10
         anchors.topMargin: 10
-//        onCurrentItemChanged: {
-//        }
+        currentIndex: -1
 
         delegate: Item {
+            id: item
+            property int emp_id: id
+            property string emp_firstName: firstName
+            property string emp_lastName: lastName
+            property int additional_id: idAdditional
             x: 5
             width: listView.width
             height: 40
@@ -80,25 +54,20 @@ Rectangle {
                     anchors.fill: parent
                     onClicked: {
                         listView.currentIndex = index;
-                        updateView();
                     }
                 }
             }
         }
-        model: empModel
-        Component.onCompleted: {
-            updateView();
+        onCurrentItemChanged: {
+            emp.id = currentItem.emp_id
+            emp.firstName = currentItem.emp_firstName
+            emp.lastName = currentItem.emp_lastName
+            getAddEmpController.additionalId = currentItem.additional_id
+            getAddEmpController.exec()
         }
+
+        model: empModel
     }
-
-
-//    SelectedUserController {
-//        id: selectedUserController
-
-//        infoViewer: empView
-//        selectedIndexEmpModel: -1
-//        model: employeeModel
-//    }
 
     Rectangle {
         id: additional
@@ -122,21 +91,21 @@ Rectangle {
             GroupText {
                 id: address
                 title: "Улица:"
-                text: ""
+                text: addEmp.address
                 readOnly: true
             }
 
             GroupText {
                 id: phone
                 title: "Телефон:"
-                text: ""
+                text: addEmp.phone
                 readOnly: true
             }
 
             GroupText {
                 id: maritalStatus
                 title: "Cемейное положение:"
-                text: ""
+                text: addEmp.maritalStatus
                 readOnly: true
             }
         }
@@ -147,6 +116,7 @@ Rectangle {
             enabled: false
             anchors.top: column.bottom
             anchors.topMargin: 5
+            model: countryModel
         }
     }
 
@@ -190,7 +160,6 @@ Rectangle {
         }
     }
 
-
     MessageDialog {
         id: dialogSuccess
         title: "Успешно"
@@ -201,5 +170,26 @@ Rectangle {
         id: dialogError
         title: "Ошибка"
         text: "Операция не выполнена"
+    }
+
+    Employee {
+        id: emp
+        additionalEmp: AdditionalEmp {
+            id: addEmp
+        }
+    }
+
+    EmpModel {
+        id: empModel
+    }
+
+    CountryModel {
+        id: countryModel
+        codeCountriesChecked: addEmp.countryCodes
+    }
+
+    GetAdditionalEmpController {
+        id: getAddEmpController
+        target: addEmp
     }
 }

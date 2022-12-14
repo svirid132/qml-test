@@ -9,8 +9,6 @@ EmpModel::EmpModel(QObject *parent)
     this->select();
     this->setHeaderData(0, Qt::Horizontal, tr("Name"));
     this->setHeaderData(1, Qt::Horizontal, tr("Salary"));
-
-    qDebug() << "this!" << this->rowCount();
 }
 
 QHash<int, QByteArray> EmpModel::roleNames() const
@@ -22,6 +20,11 @@ QHash<int, QByteArray> EmpModel::roleNames() const
     roles[idAdditionalRole] = "idAdditional";
 
     return roles;
+}
+
+void EmpModel::update()
+{
+    this->select();
 }
 
 QVariant EmpModel::data(const QModelIndex &index, int role) const

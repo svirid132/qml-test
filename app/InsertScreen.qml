@@ -1,7 +1,6 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
-import Elems 1.0
 
 Rectangle {
     id: root
@@ -21,10 +20,6 @@ Rectangle {
         maritalStatus.text = "";
         const codes = [];
         countryModel.setCheckCounties(codes);
-    }
-
-    MEmployee {
-        id: memployee
     }
 
     Text {

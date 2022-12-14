@@ -4,6 +4,7 @@
 #include <QAbstractTableModel>
 #include <QObject>
 #include "data.h"
+#include <sqlitemanager.h>
 
 /*
  * Класс предоставляет модель посещенных стран
@@ -12,14 +13,11 @@
 class CountryModel : public QAbstractTableModel
 {
     Q_OBJECT
+    Q_PROPERTY(QList<int> codeCountriesChecked READ codeCountriesChecked WRITE setCodeCountriesChecked NOTIFY codeCountriesCheckedChanged)
+
 public:
     explicit CountryModel(QObject *parent = nullptr);
 
-    /**
-     * @brief setCountryDatas - Вставка всех доступных стран
-     * @param data - данные
-     */
-    void setCountryDatas(const QList<CountryData>& data);
     //Измение выбора check для страны. Посещал или нет сотрудник страну.
     /**
      * @brief setCheck - выбор страны. Изменение check страны.
@@ -40,15 +38,23 @@ public:
      * @brief setCheckCounties - Вставка всех посещенных стран. Меняется только check.
      * @param codes - коды стран.
      */
-    Q_INVOKABLE void setCheckCounties(const QList<int>& codes);
-    /**
-     * @brief getCheckCounties - Получить выбранные страны check.
-     * @return Возвращает коды стран.
-     */
-    Q_INVOKABLE QList<int> getCheckCounties();
+    QList<int> codeCountriesChecked() {
+        QList<int> checked;
+        std::for_each(countryDatas.begin(), countryDatas.end(), [&checked](const CountryData& country) {
+            if (country.isCheck) {
+                checked.append(country.code);
+            }
+        });
+
+        return checked;
+    }
+    void setCodeCountriesChecked(const QList<int>& codes);
+signals:
+    void codeCountriesCheckedChanged();
 
 private:
     QList<CountryData> countryDatas;
+    SQLite::SQLiteManager sqliteManager = SQLite::SQLiteManager::getInstance();
     enum CountryRoles {
         codeRole = Qt::UserRole,
         nameRole = Qt::UserRole + 1,

@@ -3,18 +3,18 @@
 CountryModel::CountryModel(QObject *parent)
     : QAbstractTableModel{parent}
 {
+    QList<SQLite::Country> data = sqliteManager.execSelectCountries();
+    std::for_each(data.begin(), data.end(), [this](const SQLite::Country& country) {
+        CountryData countryHandled;
+        countryHandled.code = country.code;
+        countryHandled.country = country.name;
 
-}
-
-void CountryModel::setCountryDatas(const QList<CountryData>& data)
-{
-    QList<CountryData> sortData = data;
-
-    std::sort(sortData.begin(), sortData.end(), [](const CountryData& x, const CountryData& y) {
-        return x.code < y.code;
+        countryDatas.append(countryHandled);
     });
 
-    countryDatas = sortData;
+    std::sort(countryDatas.begin(), countryDatas.end(), [](const CountryData& x, const CountryData& y) {
+        return x.code < y.code;
+    });
 }
 
 void CountryModel::setCheck(int row, bool check)
@@ -23,7 +23,6 @@ void CountryModel::setCheck(int row, bool check)
     this->setData(index, check, Qt::EditRole);
     emit this->dataChanged(index, index);
 }
-
 
 int CountryModel::rowCount(const QModelIndex &parent) const
 {
@@ -104,7 +103,7 @@ Qt::ItemFlags CountryModel::flags(const QModelIndex &index) const
 
 bool CountryModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
-    if ( index.column() == 2) {
+    if (index.column() == 2) {
         int row = index.row();
         countryDatas[row].isCheck = value.toBool();
         return true;
@@ -113,7 +112,7 @@ bool CountryModel::setData(const QModelIndex &index, const QVariant &value, int 
     return false;
 }
 
-void CountryModel::setCheckCounties(const QList<int>& codes)
+void CountryModel::setCodeCountriesChecked(const QList<int>& codes)
 {
     QList<int> sortCodes = codes;
     std::sort(sortCodes.begin(), sortCodes.end());
@@ -136,14 +135,5 @@ void CountryModel::setCheckCounties(const QList<int>& codes)
     auto rightBottomIndex = this->index(lastRow, 2);
 
     emit this->dataChanged(leftRightIndex, rightBottomIndex);
-}
-
-QList<int> CountryModel::getCheckCounties()
-{
-    QList<int> list;
-    for (int i = 0; i < countryDatas.size(); ++i) {
-        int code = countryDatas.at(i).code;
-        if (countryDatas[i].isCheck) list.append(code);
-    }
-    return list;
+    emit codeCountriesCheckedChanged();
 }

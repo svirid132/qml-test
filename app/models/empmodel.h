@@ -12,6 +12,7 @@ public:
     // QAbstractItemModel interface
 public:
     QHash<int, QByteArray> roleNames() const;
+    Q_INVOKABLE void update();
 
 private:
     enum Roles {
