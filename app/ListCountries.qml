@@ -45,14 +45,13 @@ Rectangle {
                         checked: model.isCheck
                         enabled: rect.enabled
                         onToggled: {
-                            countryModel.setCheck(index, checkBox.checked);
+                            listView.model.setCheck(index, checkBox.checked);
                         }
                         anchors.verticalCenter: parent.verticalCenter
                     }
                     spacing: 10
                 }
             }
-//            model:
         }
     }
 }

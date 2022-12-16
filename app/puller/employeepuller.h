@@ -5,6 +5,7 @@
 
 #include <view/employee.h>
 
+//Долго прописывать ручками, лучше создать puller в js файле!
 class EmployeePuller : public QObject
 {
     Q_OBJECT

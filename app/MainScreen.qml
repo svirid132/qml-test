@@ -4,18 +4,30 @@ import QtQuick.Dialogs 1.3
 import Model 1.0
 import View 1.0
 import Controllers 1.0
+import Singelton 1.0 as S
+import './js/puller.js' 1.0 as Puller
 
 Rectangle {
     id: root
-    width: parent.width
-    height: parent.height
 
-    signal clickUpdate(int indexRow)
-
-    property alias buttonUpdate: buttonUpdate
-    property alias buttonInsert: buttonInsert
     readonly property var update: function() {
+        empModel.update()
+        listView.decrementCurrentIndex()
+    }
+    property var onClickEdit: function() {
 
+    }
+    property var onClickInsert: function() {
+
+    }
+
+    QtObject {
+        id: privateRoot
+        property var empPuller: {
+            const puller = Puller.EmployeePuller.create()
+            puller.source = emp
+            return puller
+        }
     }
 
     ListView {
@@ -42,13 +54,14 @@ Rectangle {
             Rectangle {
                 width: parent.width
                 height: parent.height
-                color: listView.currentIndex === index ? "#D1C400" : "#D1C4E9";
+                color: listView.currentIndex === index ? "#03a9f4" : "#D1C4E9"
                 Text {
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                     anchors.fill: parent
                     text: firstName + ' ' + lastName
                     font.bold: true
+                    color: listView.currentIndex === index ? "#fff" : "#000";
                 }
                 MouseArea {
                     anchors.fill: parent
@@ -59,7 +72,10 @@ Rectangle {
             }
         }
         onCurrentItemChanged: {
-            emp.id = currentItem.emp_id
+            if (!currentItem) {
+                return
+            }
+            emp.mId = currentItem.emp_id
             emp.firstName = currentItem.emp_firstName
             emp.lastName = currentItem.emp_lastName
             getAddEmpController.additionalId = currentItem.additional_id
@@ -132,42 +148,40 @@ Rectangle {
             id: buttonDelete
             text: qsTr("Удалить")
             onClicked: {
-                const currentIndex = listView.currentIndex;
-                if (!employeeModel.isValid(currentIndex)) return;
-                if (meddiator.deleteEmployee(currentIndex)) {
-                    dialogSuccess.open();
-                    listView.currentIndex = currentIndex - 1;
-                    updateView();
-                } else {
-                    dialogError.open();
-                }
+                deleteEmployeeController.del()
             }
         }
 
         Button {
-            id: buttonUpdate
+            id: editButton
             text: qsTr("Редактировать")
             onClicked: {
-                const index = listView.currentIndex;
-                if (!employeeModel.isValid(index)) return;
-                root.clickUpdate(index);
+                if (listView.currentIndex === -1) {
+                    return
+                }
+
+                privateRoot.empPuller.pull()
+                onClickEdit()
             }
         }
 
         Button {
             id: buttonInsert
             text: "Добваить"
+            onClicked: {
+                onClickInsert()
+            }
         }
     }
 
     MessageDialog {
-        id: dialogSuccess
+        id: successDialog
         title: "Успешно"
         text: "Операция прошла успешно"
     }
 
     MessageDialog {
-        id: dialogError
+        id: errorDialog
         title: "Ошибка"
         text: "Операция не выполнена"
     }
@@ -191,5 +205,18 @@ Rectangle {
     GetAdditionalEmpController {
         id: getAddEmpController
         target: addEmp
+    }
+
+    DeleteEmployeeController {
+        id: deleteEmployeeController
+        empId: emp.mId
+        additionalId: addEmp.mId
+        onAccess: function() {
+            successDialog.open()
+            root.update()
+        }
+        onError: function() {
+            errorDialog.open()
+        }
     }
 }

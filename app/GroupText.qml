@@ -34,7 +34,5 @@ Rectangle {
                 radius: 10
             }
         }
-
     }
-
 }

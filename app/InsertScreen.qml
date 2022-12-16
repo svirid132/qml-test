@@ -1,25 +1,16 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
+import View 1.0
+import Controllers 1.0
+import Model 1.0
 
 Rectangle {
     id: root
-    width: parent.width
-    height: parent.height
     color: "#c2c2c2"
 
-    signal clickedSave(bool success)
+    property var onClose: function() {
 
-    property alias buttonClose: buttonClose
-
-    function clearData() {
-        firstName.text = "";
-        lastName.text = "";
-        address.text = "";
-        phone.text = "";
-        maritalStatus.text = "";
-        const codes = [];
-        countryModel.setCheckCounties(codes);
     }
 
     Text {
@@ -81,6 +72,7 @@ Rectangle {
         width: 620
         x: 10
         y: 224
+        model: cntrModel
     }
 
     Row {
@@ -100,29 +92,17 @@ Rectangle {
             width: 115
             height: 41
             text: "Отмена"
+            onClicked: {
+                onClose()
+            }
         }
         Button {
             id: buttonSave
             width: 115
             height: 41
-            text: "Сохранитьs"
+            text: "Сохранить"
             onClicked: {
-
-                memployee.firstName = firstName.text;
-                memployee.lastName = lastName.text;
-                memployee.address = address.text;
-                memployee.phone = phone.text;
-                memployee.maritalStatus = maritalStatus.text;
-                const cnts = countryModel.getCheckCounties();
-                memployee.countryCodes = cnts;
-
-                if (meddiator.saveEmployee(memployee)) {
-                    clickedSave(true);
-                    dialogSuccess.open();
-                } else {
-                    clickedSave(false);
-                    dialogError.open();
-                }
+                postEmpController.post()
             }
         }
     }
@@ -131,11 +111,43 @@ Rectangle {
         id: dialogSuccess
         title: "Успешно"
         text: "Операция прошла успешно"
+        onVisibleChanged: function() {
+            if (!visible) {
+                onClose()
+            }
+        }
     }
 
     MessageDialog {
         id: dialogError
         title: "Ошибка"
         text: "Операция не выполнена"
+    }
+
+    PostEmployeeController {
+        id: postEmpController
+        targetEmp: emp
+        targetCntrModel: cntrModel
+        onAccess: function() {
+            dialogSuccess.open()
+        }
+        onError: function() {
+            dialogError.open()
+        }
+    }
+
+    Employee {
+        id: emp
+        firstName: firstName.text
+        lastName: lastName.text
+        additionalEmp {
+            address: address.text
+            phone: phone.text
+            maritalStatus: maritalStatus.text
+        }
+    }
+
+    CountryModel {
+        id: cntrModel
     }
 }

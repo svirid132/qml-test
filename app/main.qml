@@ -2,7 +2,6 @@ import QtQuick 2.15
 import QtQuick.Window 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
-import Model 1.0
 
 Window {
     id: window
@@ -32,15 +31,14 @@ Window {
         id: mainScreen_comp
         MainScreen {
             id: mainScreen
-            buttonInsert.onClicked:  {
-                insertScreen.clearData();
-                stack.push( insertScreen )
+            onClickEdit: function() {
+                stack.pop()
+                stack.push(updateScreen_comp)
             }
 
-            onClickUpdate: {
-                updateScreen.currentIndex = indexRow;
-                updateScreen.updateEmp();
-                stack.push( updateScreen );
+            onClickInsert: function() {
+                stack.pop()
+                stack.push(insertScreen_comp)
             }
         }
     }
@@ -49,16 +47,9 @@ Window {
         id: updateScreen_comp
         UpdateScreen {
             id: updateScreen
-            onClickedUpdate: {
-                if (success) {
-                    mainScreen.updateView();
-                    stack.pop();
-                }
+            onClose: function() {
+                stack.pop()
             }
-            buttonClose.onClicked: {
-                stack.pop();
-            }
-            visible: false
         }
     }
 
@@ -66,16 +57,9 @@ Window {
         id: insertScreen_comp
         InsertScreen {
             id: insertScreen
-            onClickedSave: {
-                if (success) {
-                    mainScreen.clickLastEmp();
-                    stack.pop();
-                }
-            }
-            buttonClose.onClicked: {
+            onClose: function() {
                 stack.pop();
             }
-            visible: false
         }
     }
 }

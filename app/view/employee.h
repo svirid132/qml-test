@@ -3,18 +3,22 @@
 
 #include <view/additionalemp.h>
 
+#include <QDebug>
 #include <QObject>
 
 class Employee : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int id READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(int mId READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(QString firstName READ firstName WRITE setFirstName NOTIFY firstNameChanged)
     Q_PROPERTY(QString lastName READ lastName WRITE setLastName NOTIFY lastNameChanged)
     Q_PROPERTY(AdditionalEmp* additionalEmp READ additionalEmp WRITE setAdditionalEmp NOTIFY additionalEmpChanged)
 
 public:
     explicit Employee(QObject *parent = nullptr);
+    ~Employee() { qDebug() << "delete Employee!"; }
+
+
     void setId(int id) {
         if (m_id == id) {
             return;

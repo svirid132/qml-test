@@ -1,27 +1,18 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
+import Singelton 1.0 as S
+import View 1.0
+import Model 1.0
+import Controllers 1.0
+import Qt.labs.platform 1.1
 
 Rectangle {
     id: root
-    width: parent.width
-    height: parent.height
     color: "#c2c2c2"
 
-    signal clickedUpdate(bool success)
+    property var onClose: function() {
 
-    property alias buttonClose: buttonClose
-
-    property int currentIndex
-
-    function updateEmp() {
-        firstName.text = memployee.firstName;
-        lastName.text = memployee.lastName;
-        address.text = memployee.address;
-        phone.text = memployee.phone;
-        maritalStatus.text = memployee.maritalStatus;
-        const codes = memployee.countryCodes;
-        countryModel.setCheckCounties(codes);
     }
 
     Text {
@@ -51,31 +42,31 @@ Rectangle {
 
         GroupText {
             id: firstName
-            text: memployee.firstName
+            text: S.Employee.firstName
             title: "Имя"
         }
 
         GroupText {
             id: lastName
-            text: memployee.lastName
+            text: S.Employee.lastName
             title: "Фамилия"
         }
 
         GroupText {
             id: address
-            text: memployee.address
+            text: S.Employee.additionalEmp.address
             title: "Адрес"
         }
 
         GroupText {
             id: phone
-            text: memployee.phone
+            text: S.Employee.additionalEmp.phone
             title: "Телефон"
         }
 
         GroupText {
             id: maritalStatus
-            text: memployee.maritalStatus
+            text: S.Employee.additionalEmp.maritalStatus
             title: "Семейное положение"
         }
     }
@@ -88,6 +79,7 @@ Rectangle {
         width: 620
         x: 10
         y: 224
+        model: countryModel
     }
 
     Row {
@@ -107,6 +99,9 @@ Rectangle {
             width: 115
             height: 41
             text: "Отмена"
+            onClicked: {
+                onClose()
+            }
         }
         Button {
             id: buttonSave
@@ -114,23 +109,7 @@ Rectangle {
             height: 41
             text: "Сохранить"
             onClicked: {
-
-                memployee.firstName = firstName.text;
-                memployee.lastName = lastName.text;
-                memployee.address = address.text;
-                memployee.phone = phone.text;
-                memployee.maritalStatus = maritalStatus.text;
-                const cnts = countryModel.getCheckCounties();
-                memployee.countryCodes = cnts;
-
-                const isSucces = meddiator.updateEmployee(currentIndex, memployee);
-                if (isSucces) {
-                    clickedUpdate(true);
-                    dialogSuccess.open();
-                } else {
-                    clickedUpdate(false);
-                    dialogError.open();
-                }
+                putEmpController.put();
             }
         }
     }
@@ -140,11 +119,46 @@ Rectangle {
         id: dialogSuccess
         title: "Успешно"
         text: "Операция прошла успешно"
+        onVisibleChanged: function() {
+            if (!visible) {
+                onClose()
+            }
+        }
     }
 
     MessageDialog {
         id: dialogError
         title: "Ошибка"
         text: "Операция не выполнена"
+    }
+
+    PutEmployeeController {
+        id: putEmpController
+        targetEmp: emp
+        targetCntrModel: countryModel
+        onAccess: function() {
+            dialogSuccess.open()
+        }
+        onError: function() {
+            dialogSuccess.open()
+        }
+    }
+
+    Employee {
+        id: emp
+        mId: S.Employee.mId
+        firstName: firstName.text
+        lastName: lastName.text
+        additionalEmp {
+            mId: S.Employee.additionalEmp.mId
+            phone: phone.text
+            maritalStatus: maritalStatus.text
+            address: address.text
+        }
+    }
+
+    CountryModel {
+        id: countryModel
+        codeCountriesChecked: S.Employee.additionalEmp.countryCodes
     }
 }

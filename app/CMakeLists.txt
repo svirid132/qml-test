@@ -11,13 +11,18 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Sql Quick REQUIRED)
-find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Sql Quick REQUIRED)
+find_package(QT NAMES Qt6 Qt5 COMPONENTS Core Sql Quick Widgets REQUIRED)
+find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Sql Quick Widgets REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
         puller/employeepuller.h puller/employeepuller.cpp
+        controllers/basecontroller.h controllers/basecontroller.cpp
+        controllers/deleteemployeecontroller.h controllers/deleteemployeecontroller.cpp
+        controllers/baseemployeecontroller.h controllers/baseemployeecontroller.cpp
         controllers/getadditionalempcontroller.h controllers/getadditionalempcontroller.cpp
+        controllers/postemployeecontroller.h controllers/postemployeecontroller.cpp
+        controllers/putemployeecontroller.h controllers/putemployeecontroller.cpp
         view/additionalemp.cpp view/additionalemp.h
         view/employee.h view/employee.cpp
         models/empmodel.h models/empmodel.cpp
@@ -51,7 +56,7 @@ endif()
 target_compile_definitions(app
   PRIVATE $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG> sqlite)
 target_link_libraries(app
-  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Sql sqlite)
+  PRIVATE Qt${QT_VERSION_MAJOR}::Core Qt${QT_VERSION_MAJOR}::Quick Qt${QT_VERSION_MAJOR}::Sql Qt${QT_VERSION_MAJOR}::Widgets sqlite)
 
 set_target_properties(app PROPERTIES
     MACOSX_BUNDLE_GUI_IDENTIFIER my.example.com

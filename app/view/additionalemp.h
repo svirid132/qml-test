@@ -1,12 +1,13 @@
 #ifndef ADDITIONALEMP_H
 #define ADDITIONALEMP_H
 
+#include <QDebug>
 #include <QObject>
 
 class AdditionalEmp : public QObject
 {
     Q_OBJECT
-    Q_PROPERTY(int id READ id WRITE setId NOTIFY idChanged)
+    Q_PROPERTY(int mId READ id WRITE setId NOTIFY idChanged)
     Q_PROPERTY(QString address READ address WRITE setAddress NOTIFY addressChanged)
     Q_PROPERTY(QString phone READ phone WRITE setPhone NOTIFY phoneChanged)
     Q_PROPERTY(QString maritalStatus READ maritalStatus WRITE setMaritalStatus NOTIFY maritalStatusChanged)
@@ -14,6 +15,7 @@ class AdditionalEmp : public QObject
 
 public:
     explicit AdditionalEmp(QObject *parent = nullptr);
+    ~AdditionalEmp() { qDebug() << "delete AdditionalEmp!"; }
 
     void setId(int id) {
         if (m_id == id) {

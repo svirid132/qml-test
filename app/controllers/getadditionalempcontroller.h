@@ -13,7 +13,7 @@ class getAdditionalEmpController : public QObject
     Q_OBJECT
     //Параметры
     Q_PROPERTY(int additionalId READ additionalId WRITE setAdditionalId NOTIFY additionalIdChanged)
-    //Заполнянет (возвращает)
+    //Заполнянет (цель)
     Q_PROPERTY(AdditionalEmp* target READ target WRITE setTarget NOTIFY targetChanged)
 
 public:
