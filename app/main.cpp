@@ -42,6 +42,8 @@ int main(int argc, char *argv[])
     qmlRegisterType<DeleteEmployeeController>("Controllers", 1, 0, "DeleteEmployeeController");
     qmlRegisterType<EmployeePuller>("Puller", 1, 0, "EmployeePuller");
 
+    qmlRegisterSingletonType(QUrl("qrc:/SliceMainScreen.qml"), "Slice", 1, 0, "SliceMainScreen");
+
     QQmlApplicationEngine engine;
     const QUrl url(QStringLiteral("qrc:/main.qml"));
     QObject::connect(&engine, &QQmlApplicationEngine::objectCreated,

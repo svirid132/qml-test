@@ -5,15 +5,18 @@ import Model 1.0
 import View 1.0
 import Controllers 1.0
 import Singelton 1.0 as S
-import './js/puller.js' 1.0 as Puller
+import Slice 1.0
 
 Rectangle {
     id: root
 
     readonly property var update: function() {
         empModel.update()
+    }
+    readonly property var decrementCurrentIndex: function() {
         listView.decrementCurrentIndex()
     }
+
     property var onClickEdit: function() {
 
     }
@@ -23,11 +26,8 @@ Rectangle {
 
     QtObject {
         id: privateRoot
-        property var empPuller: {
-            const puller = Puller.EmployeePuller.create()
-            puller.source = emp
-            return puller
-        }
+        property Employee emp: SliceMainScreen.employee
+        property AdditionalEmp addEmp: SliceMainScreen.additionalEmployee
     }
 
     ListView {
@@ -75,9 +75,9 @@ Rectangle {
             if (!currentItem) {
                 return
             }
-            emp.mId = currentItem.emp_id
-            emp.firstName = currentItem.emp_firstName
-            emp.lastName = currentItem.emp_lastName
+            privateRoot.emp.mId = currentItem.emp_id
+            privateRoot.emp.firstName = currentItem.emp_firstName
+            privateRoot.emp.lastName = currentItem.emp_lastName
             getAddEmpController.additionalId = currentItem.additional_id
             getAddEmpController.exec()
         }
@@ -107,21 +107,21 @@ Rectangle {
             GroupText {
                 id: address
                 title: "Улица:"
-                text: addEmp.address
+                text: privateRoot.addEmp.address
                 readOnly: true
             }
 
             GroupText {
                 id: phone
                 title: "Телефон:"
-                text: addEmp.phone
+                text: privateRoot.addEmp.phone
                 readOnly: true
             }
 
             GroupText {
                 id: maritalStatus
                 title: "Cемейное положение:"
-                text: addEmp.maritalStatus
+                text: privateRoot.addEmp.maritalStatus
                 readOnly: true
             }
         }
@@ -160,7 +160,6 @@ Rectangle {
                     return
                 }
 
-                privateRoot.empPuller.pull()
                 onClickEdit()
             }
         }
@@ -186,37 +185,35 @@ Rectangle {
         text: "Операция не выполнена"
     }
 
-    Employee {
-        id: emp
-        additionalEmp: AdditionalEmp {
-            id: addEmp
-        }
-    }
-
     EmpModel {
         id: empModel
     }
 
     CountryModel {
         id: countryModel
-        codeCountriesChecked: addEmp.countryCodes
+        codeCountriesChecked: privateRoot.addEmp.countryCodes
     }
 
     GetAdditionalEmpController {
         id: getAddEmpController
-        target: addEmp
+        target: privateRoot.addEmp
     }
 
     DeleteEmployeeController {
         id: deleteEmployeeController
-        empId: emp.mId
-        additionalId: addEmp.mId
+        empId: privateRoot.emp.mId
+        additionalId: privateRoot.addEmp.mId
         onAccess: function() {
             successDialog.open()
             root.update()
+            root.decrementCurrentIndex()
         }
         onError: function() {
             errorDialog.open()
         }
+    }
+
+    Component.onDestruction: {
+        console.log('destroy')
     }
 }

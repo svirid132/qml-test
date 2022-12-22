@@ -15,6 +15,12 @@ Rectangle {
 
     }
 
+    QtObject {
+        id: privateRoot
+        property var initEmp: SliceMainScreen.employee
+        property var initAddEmp: SliceMainScreen.additionalEmployee
+    }
+
     Text {
         id: title
         text: "Редактировать"
@@ -42,31 +48,31 @@ Rectangle {
 
         GroupText {
             id: firstName
-            text: S.Employee.firstName
+            text: privateRoot.initEmp.firstName
             title: "Имя"
         }
 
         GroupText {
             id: lastName
-            text: S.Employee.lastName
+            text: privateRoot.initEmp.lastName
             title: "Фамилия"
         }
 
         GroupText {
             id: address
-            text: S.Employee.additionalEmp.address
+            text: privateRoot.initAddEmp.address
             title: "Адрес"
         }
 
         GroupText {
             id: phone
-            text: S.Employee.additionalEmp.phone
+            text: privateRoot.initAddEmp.phone
             title: "Телефон"
         }
 
         GroupText {
             id: maritalStatus
-            text: S.Employee.additionalEmp.maritalStatus
+            text: privateRoot.initAddEmp.maritalStatus
             title: "Семейное положение"
         }
     }
@@ -146,11 +152,11 @@ Rectangle {
 
     Employee {
         id: emp
-        mId: S.Employee.mId
+        mId: privateRoot.initEmp.mId
         firstName: firstName.text
         lastName: lastName.text
         additionalEmp {
-            mId: S.Employee.additionalEmp.mId
+            mId: privateRoot.initAddEmp.mId
             phone: phone.text
             maritalStatus: maritalStatus.text
             address: address.text
@@ -159,6 +165,6 @@ Rectangle {
 
     CountryModel {
         id: countryModel
-        codeCountriesChecked: S.Employee.additionalEmp.countryCodes
+        codeCountriesChecked: privateRoot.initAddEmp.countryCodes
     }
 }

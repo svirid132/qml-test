@@ -7,5 +7,6 @@
         <file>InsertScreen.qml</file>
         <file>ListCountries.qml</file>
         <file>js/puller.js</file>
+        <file>SliceMainScreen.qml</file>
     </qresource>
 </RCC>
