@@ -1,8 +1,7 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
-import View 1.0
-import Controllers 1.0
+import Controller 1.0
 import Model 1.0
 
 Rectangle {
@@ -72,7 +71,7 @@ Rectangle {
         width: 620
         x: 10
         y: 224
-        model: cntrModel
+        model: countryTable
     }
 
     Row {
@@ -102,7 +101,8 @@ Rectangle {
             height: 41
             text: "Сохранить"
             onClicked: {
-                postEmpController.post()
+                addEmp.countryCodes = countryTable.codeCountriesChecked
+                empController.post()
             }
         }
     }
@@ -124,30 +124,30 @@ Rectangle {
         text: "Операция не выполнена"
     }
 
-    PostEmployeeController {
-        id: postEmpController
-        targetEmp: emp
-        targetCntrModel: cntrModel
-        onAccess: function() {
-            dialogSuccess.open()
-        }
-        onError: function() {
-            dialogError.open()
-        }
-    }
-
     Employee {
         id: emp
         firstName: firstName.text
         lastName: lastName.text
         additionalEmp {
+            id: addEmp
             address: address.text
             phone: phone.text
             maritalStatus: maritalStatus.text
         }
     }
 
-    CountryModel {
-        id: cntrModel
+    CountryTable {
+        id: countryTable
+    }
+
+    EmployeeController {
+        id: empController
+        target: emp
+        onAccess: function() {
+            dialogSuccess.open()
+        }
+        onError: function() {
+            dialogError.open()
+        }
     }
 }

@@ -1,17 +1,12 @@
 #include <QGuiApplication>
 #include <QQmlApplicationEngine>
 #include <QtSql>
-#include <controllers/deleteemployeecontroller.h>
-#include <controllers/getadditionalempcontroller.h>
-#include <controllers/postemployeecontroller.h>
-#include <controllers/putemployeecontroller.h>
+#include <controller/employeecontroller.h>
 #include <datasqlite.h>
-#include <models/countrymodel.h>
-#include <puller/employeepuller.h>
+#include <model/countrytable.h>
+#include <model/employeetable.h>
 #include <sqlitemanager.h>
-#include <view/additionalemp.h>
-#include "dataMeddiator.h"
-#include "models/empmodel.h"
+#include <model/additionalemp.h>
 #include <QApplication>
 #include <QSqlError>
 #include <datasqlite.h>
@@ -31,17 +26,11 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    qmlRegisterType<AdditionalEmp>("View", 1, 0, "AdditionalEmp");
-    qmlRegisterType<Employee>("View", 1, 0, "Employee");
-    qmlRegisterType<EmpModel>("Model", 1, 0, "EmpModel");
-    qmlRegisterType<CountryModel>("Model", 1, 0, "CountryModel");
-    qmlRegisterSingletonInstance<Employee>("Singelton", 1, 0, "Employee", new Employee);
-    qmlRegisterType<getAdditionalEmpController>("Controllers", 1, 0, "GetAdditionalEmpController");
-    qmlRegisterType<PutEmployeeController>("Controllers", 1, 0, "PutEmployeeController");
-    qmlRegisterType<PostEmployeeController>("Controllers", 1, 0, "PostEmployeeController");
-    qmlRegisterType<DeleteEmployeeController>("Controllers", 1, 0, "DeleteEmployeeController");
-    qmlRegisterType<EmployeePuller>("Puller", 1, 0, "EmployeePuller");
-
+    qmlRegisterType<AdditionalEmp>("Model", 1, 0, "AdditionalEmp");
+    qmlRegisterType<Employee>("Model", 1, 0, "Employee");
+    qmlRegisterType<EmployeeTable>("Model", 1, 0, "EmployeTable");
+    qmlRegisterType<CountryTable>("Model", 1, 0, "CountryTable");
+    qmlRegisterType<EmployeeController>("Controller", 1, 0, "EmployeeController");
     qmlRegisterSingletonType(QUrl("qrc:/SliceMainScreen.qml"), "Slice", 1, 0, "SliceMainScreen");
 
     QQmlApplicationEngine engine;

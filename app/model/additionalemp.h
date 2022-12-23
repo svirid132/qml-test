@@ -15,7 +15,7 @@ class AdditionalEmp : public QObject
 
 public:
     explicit AdditionalEmp(QObject *parent = nullptr);
-    ~AdditionalEmp() { qDebug() << "delete AdditionalEmp!"; }
+    ~AdditionalEmp() { }
 
     void setId(int id) {
         if (m_id == id) {

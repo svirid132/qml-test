@@ -1,7 +1,7 @@
 #ifndef EMPLOYEE_H
 #define EMPLOYEE_H
 
-#include <view/additionalemp.h>
+#include <model/additionalemp.h>
 
 #include <QDebug>
 #include <QObject>
@@ -16,7 +16,7 @@ class Employee : public QObject
 
 public:
     explicit Employee(QObject *parent = nullptr);
-    ~Employee() { qDebug() << "delete Employee!"; }
+    ~Employee() { }
 
 
     void setId(int id) {

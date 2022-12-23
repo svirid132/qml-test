@@ -1,22 +1,27 @@
-#ifndef COUNTRYMODEL_H
-#define COUNTRYMODEL_H
+#ifndef COUNTRYTABLE_H
+#define COUNTRYTABLE_H
 
 #include <QAbstractTableModel>
 #include <QObject>
-#include "data.h"
 #include <sqlitemanager.h>
+
+struct CountryData {
+    int code;
+    QString country;
+    bool isCheck = false;
+};
 
 /*
  * Класс предоставляет модель посещенных стран
  * */
 
-class CountryModel : public QAbstractTableModel
+class CountryTable : public QAbstractTableModel
 {
     Q_OBJECT
     Q_PROPERTY(QList<int> codeCountriesChecked READ codeCountriesChecked WRITE setCodeCountriesChecked NOTIFY codeCountriesCheckedChanged)
 
 public:
-    explicit CountryModel(QObject *parent = nullptr);
+    explicit CountryTable(QObject *parent = nullptr);
 
     //Измение выбора check для страны. Посещал или нет сотрудник страну.
     /**
@@ -62,4 +67,4 @@ private:
     };
 };
 
-#endif // COUNTRYMODEL_H
+#endif // CountryTable_H

@@ -1,6 +1,6 @@
-#include "countrymodel.h"
+#include "countrytable.h"
 
-CountryModel::CountryModel(QObject *parent)
+CountryTable::CountryTable(QObject *parent)
     : QAbstractTableModel{parent}
 {
     QList<SQLite::Country> data = sqliteManager.execSelectCountries();
@@ -17,24 +17,24 @@ CountryModel::CountryModel(QObject *parent)
     });
 }
 
-void CountryModel::setCheck(int row, bool check)
+void CountryTable::setCheck(int row, bool check)
 {
     QModelIndex index = this->index(row, 2);
     this->setData(index, check, Qt::EditRole);
     emit this->dataChanged(index, index);
 }
 
-int CountryModel::rowCount(const QModelIndex &parent) const
+int CountryTable::rowCount(const QModelIndex &parent) const
 {
     return countryDatas.size();
 }
 
-int CountryModel::columnCount(const QModelIndex &parent) const
+int CountryTable::columnCount(const QModelIndex &parent) const
 {
     return 3;
 }
 
-QVariant CountryModel::data(const QModelIndex &index, int role) const
+QVariant CountryTable::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();
@@ -79,7 +79,7 @@ QVariant CountryModel::data(const QModelIndex &index, int role) const
 }
 
 
-QHash<int, QByteArray> CountryModel::roleNames() const
+QHash<int, QByteArray> CountryTable::roleNames() const
 {
     QHash<int, QByteArray> roles = QAbstractTableModel::roleNames();
     roles[codeRole] = "code";
@@ -90,7 +90,7 @@ QHash<int, QByteArray> CountryModel::roleNames() const
 }
 
 
-Qt::ItemFlags CountryModel::flags(const QModelIndex &index) const
+Qt::ItemFlags CountryTable::flags(const QModelIndex &index) const
 {
     Qt::ItemFlags flags = QAbstractTableModel::flags(index);
     if (index.column() == 2) {
@@ -101,7 +101,7 @@ Qt::ItemFlags CountryModel::flags(const QModelIndex &index) const
 }
 
 
-bool CountryModel::setData(const QModelIndex &index, const QVariant &value, int role)
+bool CountryTable::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (index.column() == 2) {
         int row = index.row();
@@ -112,7 +112,7 @@ bool CountryModel::setData(const QModelIndex &index, const QVariant &value, int 
     return false;
 }
 
-void CountryModel::setCodeCountriesChecked(const QList<int>& codes)
+void CountryTable::setCodeCountriesChecked(const QList<int>& codes)
 {
     QList<int> sortCodes = codes;
     std::sort(sortCodes.begin(), sortCodes.end());

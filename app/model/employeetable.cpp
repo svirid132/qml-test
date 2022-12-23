@@ -1,8 +1,8 @@
-#include "empmodel.h"
+#include "employeetable.h"
 
 #include <QDebug>
 
-EmpModel::EmpModel(QObject *parent)
+EmployeeTable::EmployeeTable(QObject *parent)
     : QSqlTableModel{parent}
 {
     this->setTable("employees");
@@ -11,7 +11,7 @@ EmpModel::EmpModel(QObject *parent)
     this->setHeaderData(1, Qt::Horizontal, tr("Salary"));
 }
 
-QHash<int, QByteArray> EmpModel::roleNames() const
+QHash<int, QByteArray> EmployeeTable::roleNames() const
 {
     QHash<int, QByteArray> roles = QAbstractTableModel::roleNames();
     roles[idRole] = "id";
@@ -22,12 +22,12 @@ QHash<int, QByteArray> EmpModel::roleNames() const
     return roles;
 }
 
-void EmpModel::update()
+void EmployeeTable::update()
 {
     this->select();
 }
 
-QVariant EmpModel::data(const QModelIndex &index, int role) const
+QVariant EmployeeTable::data(const QModelIndex &index, int role) const
 {
     if (!index.isValid()) {
         return QVariant();

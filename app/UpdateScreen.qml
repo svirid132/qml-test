@@ -1,10 +1,8 @@
 import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
-import Singelton 1.0 as S
-import View 1.0
 import Model 1.0
-import Controllers 1.0
+import Controller 1.0
 import Qt.labs.platform 1.1
 
 Rectangle {
@@ -16,9 +14,9 @@ Rectangle {
     }
 
     QtObject {
-        id: privateRoot
-        property var initEmp: SliceMainScreen.employee
-        property var initAddEmp: SliceMainScreen.additionalEmployee
+        id: _root
+        property Employee initEmp: SliceMainScreen.employee
+        property AdditionalEmp initAddEmp: _root.initEmp.additionalEmp
     }
 
     Text {
@@ -48,31 +46,31 @@ Rectangle {
 
         GroupText {
             id: firstName
-            text: privateRoot.initEmp.firstName
+            text: _root.initEmp.firstName
             title: "Имя"
         }
 
         GroupText {
             id: lastName
-            text: privateRoot.initEmp.lastName
+            text: _root.initEmp.lastName
             title: "Фамилия"
         }
 
         GroupText {
             id: address
-            text: privateRoot.initAddEmp.address
+            text: _root.initAddEmp.address
             title: "Адрес"
         }
 
         GroupText {
             id: phone
-            text: privateRoot.initAddEmp.phone
+            text: _root.initAddEmp.phone
             title: "Телефон"
         }
 
         GroupText {
             id: maritalStatus
-            text: privateRoot.initAddEmp.maritalStatus
+            text: _root.initAddEmp.maritalStatus
             title: "Семейное положение"
         }
     }
@@ -85,7 +83,7 @@ Rectangle {
         width: 620
         x: 10
         y: 224
-        model: countryModel
+        model: countryTable
     }
 
     Row {
@@ -115,7 +113,8 @@ Rectangle {
             height: 41
             text: "Сохранить"
             onClicked: {
-                putEmpController.put();
+                addEmp.countryCodes = countryTable.codeCountriesChecked
+                empController.put();
             }
         }
     }
@@ -138,33 +137,33 @@ Rectangle {
         text: "Операция не выполнена"
     }
 
-    PutEmployeeController {
-        id: putEmpController
-        targetEmp: emp
-        targetCntrModel: countryModel
-        onAccess: function() {
-            dialogSuccess.open()
-        }
-        onError: function() {
-            dialogSuccess.open()
-        }
-    }
-
     Employee {
         id: emp
-        mId: privateRoot.initEmp.mId
+        mId: _root.initEmp.mId
         firstName: firstName.text
         lastName: lastName.text
         additionalEmp {
-            mId: privateRoot.initAddEmp.mId
+            id: addEmp
+            mId: _root.initAddEmp.mId
             phone: phone.text
             maritalStatus: maritalStatus.text
             address: address.text
         }
     }
 
-    CountryModel {
-        id: countryModel
-        codeCountriesChecked: privateRoot.initAddEmp.countryCodes
+    EmployeeController {
+        id: empController
+        target: emp
+        onAccess: function(){
+            dialogSuccess.open()
+        }
+        onError: function(){
+            dialogError.open()
+        }
+    }
+
+    CountryTable {
+        id: countryTable
+        codeCountriesChecked: _root.initAddEmp.countryCodes
     }
 }

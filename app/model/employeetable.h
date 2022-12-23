@@ -1,13 +1,13 @@
-#ifndef EMPMODEL_H
-#define EMPMODEL_H
+#ifndef EMPLOYEETABLE_H
+#define EMPLOYEETABLE_H
 
 #include <QSqlTableModel>
 
-class EmpModel : public QSqlTableModel
+class EmployeeTable : public QSqlTableModel
 {
     Q_OBJECT
 public:
-    explicit EmpModel(QObject *parent = nullptr);
+    explicit EmployeeTable(QObject *parent = nullptr);
 
     // QAbstractItemModel interface
 public:
@@ -27,4 +27,4 @@ public:
     QVariant data(const QModelIndex &index, int role) const;
 };
 
-#endif // EMPMODEL_H
+#endif // EmployeeTable_H

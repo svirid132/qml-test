@@ -2,16 +2,14 @@ import QtQuick 2.15
 import QtQuick.Controls 2.15
 import QtQuick.Dialogs 1.3
 import Model 1.0
-import View 1.0
-import Controllers 1.0
-import Singelton 1.0 as S
+import Controller 1.0
 import Slice 1.0
 
 Rectangle {
     id: root
 
     readonly property var update: function() {
-        empModel.update()
+        empTable.update()
     }
     readonly property var decrementCurrentIndex: function() {
         listView.decrementCurrentIndex()
@@ -25,9 +23,9 @@ Rectangle {
     }
 
     QtObject {
-        id: privateRoot
+        id: _root
         property Employee emp: SliceMainScreen.employee
-        property AdditionalEmp addEmp: SliceMainScreen.additionalEmployee
+        property AdditionalEmp addEmp: emp.additionalEmp
     }
 
     ListView {
@@ -44,10 +42,12 @@ Rectangle {
 
         delegate: Item {
             id: item
-            property int emp_id: id
-            property string emp_firstName: firstName
-            property string emp_lastName: lastName
-            property int additional_id: idAdditional
+            property var empObj: ({
+                                      emp_id: id,
+                                      emp_firstName: firstName,
+                                      emp_lastName: lastName,
+                                      additional_id: idAdditional
+                                  })
             x: 5
             width: listView.width
             height: 40
@@ -75,14 +75,11 @@ Rectangle {
             if (!currentItem) {
                 return
             }
-            privateRoot.emp.mId = currentItem.emp_id
-            privateRoot.emp.firstName = currentItem.emp_firstName
-            privateRoot.emp.lastName = currentItem.emp_lastName
-            getAddEmpController.additionalId = currentItem.additional_id
-            getAddEmpController.exec()
+            SliceMainScreen.setEmployee(currentItem.empObj)
+            SliceMainScreen.getAdditionalEmployee()
         }
 
-        model: empModel
+        model: empTable
     }
 
     Rectangle {
@@ -107,21 +104,21 @@ Rectangle {
             GroupText {
                 id: address
                 title: "Улица:"
-                text: privateRoot.addEmp.address
+                text: _root.addEmp.address
                 readOnly: true
             }
 
             GroupText {
                 id: phone
                 title: "Телефон:"
-                text: privateRoot.addEmp.phone
+                text: _root.addEmp.phone
                 readOnly: true
             }
 
             GroupText {
                 id: maritalStatus
                 title: "Cемейное положение:"
-                text: privateRoot.addEmp.maritalStatus
+                text: _root.addEmp.maritalStatus
                 readOnly: true
             }
         }
@@ -132,7 +129,7 @@ Rectangle {
             enabled: false
             anchors.top: column.bottom
             anchors.topMargin: 5
-            model: countryModel
+            model: countryTable
         }
     }
 
@@ -185,35 +182,12 @@ Rectangle {
         text: "Операция не выполнена"
     }
 
-    EmpModel {
-        id: empModel
+    EmployeTable {
+        id: empTable
     }
 
-    CountryModel {
-        id: countryModel
-        codeCountriesChecked: privateRoot.addEmp.countryCodes
-    }
-
-    GetAdditionalEmpController {
-        id: getAddEmpController
-        target: privateRoot.addEmp
-    }
-
-    DeleteEmployeeController {
-        id: deleteEmployeeController
-        empId: privateRoot.emp.mId
-        additionalId: privateRoot.addEmp.mId
-        onAccess: function() {
-            successDialog.open()
-            root.update()
-            root.decrementCurrentIndex()
-        }
-        onError: function() {
-            errorDialog.open()
-        }
-    }
-
-    Component.onDestruction: {
-        console.log('destroy')
+    CountryTable {
+        id: countryTable
+        codeCountriesChecked: _root.addEmp.countryCodes
     }
 }

@@ -16,17 +16,12 @@ find_package(Qt${QT_VERSION_MAJOR} COMPONENTS Core Sql Quick Widgets REQUIRED)
 
 set(PROJECT_SOURCES
         main.cpp
-        puller/employeepuller.h puller/employeepuller.cpp
-        controllers/basecontroller.h controllers/basecontroller.cpp
-        controllers/deleteemployeecontroller.h controllers/deleteemployeecontroller.cpp
-        controllers/baseemployeecontroller.h controllers/baseemployeecontroller.cpp
-        controllers/getadditionalempcontroller.h controllers/getadditionalempcontroller.cpp
-        controllers/postemployeecontroller.h controllers/postemployeecontroller.cpp
-        controllers/putemployeecontroller.h controllers/putemployeecontroller.cpp
-        view/additionalemp.cpp view/additionalemp.h
-        view/employee.h view/employee.cpp
-        models/empmodel.h models/empmodel.cpp
-        models/countrymodel.cpp models/countrymodel.h
+        controller/basecontroller.h controller/basecontroller.cpp
+        controller/employeecontroller.h controller/employeecontroller.cpp
+        model/additionalemp.cpp model/additionalemp.h
+        model/employee.h model/employee.cpp
+        model/employeetable.h model/employeetable.cpp
+        model/countrytable.h model/countrytable.cpp
         qml.qrc
 )
 
